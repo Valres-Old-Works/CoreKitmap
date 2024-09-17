@@ -20,3 +20,20 @@
  */
 
 declare(strict_types=1);
+
+namespace Valres\CoreKitmap\commands\staff\sanctions;
+
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+
+class BlacklistCommand extends Command
+{
+    public function __construct() {
+        parent::__construct("blacklist", "Blacklist toutes les IPs et Uuids d'un joueur", "usage : /blacklist <player>");
+        $this->setPermission("blacklist.command");
+    }
+
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
+        
+    }
+}

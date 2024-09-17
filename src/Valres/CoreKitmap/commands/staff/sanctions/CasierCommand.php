@@ -50,7 +50,6 @@ class CasierCommand extends Command
                 $sender->sendMessage($config->get("no-players"));
                 return;
             }
-
             /** @var CasierJudiciaire $casier */
             $casier = unserialize($offlineData->getString("casier", serialize(new CasierJudiciaire())));
         } else $casier = $target->getCasierJudiciaire();
@@ -62,11 +61,15 @@ class CasierCommand extends Command
                 ["{date}", "{reason}", "{author}"],
                 [TimeHelper::timestampToDate($ban->getTime()), $ban->getReason(), $ban->getAuthorName()],
                 $config->get("casier-ban-lines")
-            );
+            ) . "\n";
         }
-        $message .= "§9Mutes (§r" . count($casier->getMutes()) . "§9)§r: \n";
+        $message .= str_replace("{mutes}", strval(count($casier->getMutes())), $config->get("casier-mute-title")) . "\n";
         foreach($casier->getMutes() as $mute){
-            $message .= "- le §9" . TimeHelper::timestampToDate($mute->getTime()) . "§r pour §9" . $mute->getReason() . "§r par §9" . $mute->getAuthorName() . "§r\n";
+            $message .= str_replace(
+                    ["{date}", "{reason}", "{author}"],
+                    [TimeHelper::timestampToDate($mute->getTime()), $mute->getReason(), $mute->getAuthorName()],
+                    $config->get("casier-mute-lines")
+                ) . "\n";
         }
         $sender->sendMessage($message);
     }
