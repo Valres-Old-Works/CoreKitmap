@@ -1,0 +1,23 @@
+name: CoreKitpmap
+author: Atom-Valres
+api: [5.0.0]
+version: 0.0.1
+main: Valres\CoreKitmap\Core
+
+permissions:
+  ban.command:
+    default: op
+  blacklist.command:
+    default: op
+  casier.command:
+    default: op
+  ip-ban.command:
+    default: op
+  ip-unban.command:
+    default: op
+  unban.command:
+    default: op
+  uuid-ban.command:
+    default: op
+  uuid-unban.command:
+    default: op

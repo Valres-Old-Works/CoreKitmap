@@ -1,0 +1,33 @@
+webhook-url: ""
+
+no-players: "§cCe joueur n'existe pas ou ne c'est jamais connecté."
+
+casier-title: "Voiçi le casier de {player}:"
+casier-ban-title: "Bans ({bans}):"
+casier-ban-lines: "Ban le {date} pour {reason} par {author}"
+casier-mute-title: "Mutes ({mutes}):"
+casier-mute-lines: "Ban le {date} pour {reason} par {author}"
+
+already-ban-message: "§cCe joueur est déja ban."
+not-ban-message: "§cCe joueur n'est pas ban."
+ban-login-message: "§cVous êtes banni de ce serveur.\nRaison: {reason}\nPendant: {time}\nPar: {author}"
+ban-message: "§cLe joueur {player} vient d'être ban pour {reason}, pendant {time} par {author} !"
+ip-ban-message: "§cToutes les IPs de {player} viennent d'être ban."
+ip-unban-message: "§cToutes les IPs de {player} viennent d'être unban."
+uuid-ban-message: "§cToutes les Uuids de {player} viennent d'être ban."
+uuid-unban-message: "§cToutes les Uuids de {player} viennent d'être unban."
+unban-message: "§cLe joueur {player} vient d'être unban par {author} !"
+ban-embed:
+  title: "Ban system:"
+  description: "Nouveau ban: {player}\nRaison: {reason}\nPendant: {time}"
+  footer: "Ban par: {author}"
+
+already-mute-message: "§cCe joueur est déja mute."
+not-mute-message: "§cCe joueur n'est pas mute."
+mute-player-message: "§cVous êtes encore mute pendant {time} pour {reason}."
+mute-message: "§cLe joueur {player} vient d'être mute pour {reason}, pendant {time} par {author} !"
+unmute-message: "§cLe joueur {player} vient d'être unmute par {author} !"
+mute-embed:
+  title: "Mute system:"
+  description: "Nouveau mute: {player}\nRaison: {reason}\nPendant: {time}"
+  footer: "Mute par: {author}"
