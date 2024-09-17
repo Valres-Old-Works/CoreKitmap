@@ -42,6 +42,11 @@ class CasierCommand extends Command
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile("sanctions-config");
+        if(count($args) < 1){
+            $sender->sendMessage($this->getUsage());
+            return;
+        }
+
         $target = $args[0];
 
         if(!$target instanceof CustomPlayer){

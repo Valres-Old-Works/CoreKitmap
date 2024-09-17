@@ -25,6 +25,7 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use Valres\CoreKitmap\Core;
 
 class BlacklistCommand extends Command
 {
@@ -33,7 +34,13 @@ class BlacklistCommand extends Command
         $this->setPermission("blacklist.command");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args) {
-        
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void {
+        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        if(count($args) < 1){
+            $sender->sendMessage($this->getUsage());
+            return;
+        }
+
+        $target = $args[0];
     }
 }
