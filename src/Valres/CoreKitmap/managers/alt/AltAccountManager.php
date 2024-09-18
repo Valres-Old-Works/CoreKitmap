@@ -74,4 +74,26 @@ class AltAccountManager extends BaseManager
     public function getUUIDs(string $playerName): ?array {
         return $this->accounts[$playerName]->getUuids() ?? null;
     }
+
+    public function getPseudoByIP(string $ip): array {
+        $pseudos = [];
+        foreach($this->accounts as $playerName => $data){
+            if(in_array($ip, $data->getIPs())){
+                $pseudos[] = $playerName;
+            }
+        }
+
+        return $pseudos;
+    }
+
+    public function getPseudoByUuid(string $uuid): array {
+        $pseudos = [];
+        foreach($this->accounts as $playerName => $data){
+            if(in_array($uuid, $data->getUuids())){
+                $pseudos[] = $playerName;
+            }
+        }
+
+        return $pseudos;
+    }
 }
