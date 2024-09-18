@@ -301,6 +301,9 @@ class SanctionsManager extends BaseManager
         $player_ = Server::getInstance()->getPlayerExact($player);
         if(!$player_ instanceof CustomPlayer){
             $offlinedata = Server::getInstance()->getOfflinePlayerData($player);
+            if(!$offlinedata instanceof CompoundTag){
+                return;
+            }
             /** @var CasierJudiciaire $casier */
             $casier = unserialize($offlinedata->getString("casier"));
             $casier->addMute($mute);
