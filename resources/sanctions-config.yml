@@ -1,3 +1,11 @@
+#
+# {bans}/{mutes} -> Nombres de bans/mutes du joueur.
+#    {player}    -> Nom du joueur.
+#     {date}     -> Date de la sanction.
+#    {reason}    -> Raison de la sanction.
+#    {author}    -> Auteur de la sanction.
+#
+
 webhook-url: ""
 
 no-players: "§cCe joueur n'existe pas ou ne c'est jamais connecté."
@@ -8,6 +16,21 @@ casier-ban-lines: "Ban le {date} pour {reason} par {author}"
 casier-mute-title: "Mutes ({mutes}):"
 casier-mute-lines: "Ban le {date} pour {reason} par {author}"
 
+banlist-title: "Ban total ({bans}):"
+banlist-lines: "{type} : {player} le {date} pour {reason} par {author}"
+mutelist-title: "Mute total ({mutes}):"
+mutelist-lines: "Mute : {player} le {date} pour {reason} par {author}"
+
+alias-title: "Possible DC de {player}:"
+alias-account-title: "Comptes liés aux IP:"
+alias-account-lines: "- {pseudo}"
+alias-ip-title: "IPs liées à ce pseudo:"
+alias-ip-lines: "- {ip}"
+alias-uuid-title: "Uuids liées à ce pseudo:"
+alias-uuid-lines: "- {uuid}"
+
+blacklist: "§cLe joueur {player} vient d'être blacklist."
+
 already-ban-message: "§cCe joueur est déja ban."
 not-ban-message: "§cCe joueur n'est pas ban."
 ban-login-message: "§cVous êtes banni de ce serveur.\nRaison: {reason}\nPendant: {time}\nPar: {author}"
@@ -17,6 +40,7 @@ ip-unban-message: "§cToutes les IPs de {player} viennent d'être unban."
 uuid-ban-message: "§cToutes les Uuids de {player} viennent d'être ban."
 uuid-unban-message: "§cToutes les Uuids de {player} viennent d'être unban."
 unban-message: "§cLe joueur {player} vient d'être unban par {author} !"
+unban-all-message: "§cTout les joueurs, IPs et Uuid viennent d'être unban ! (pas les blacklist)"
 ban-embed:
   title: "Ban system:"
   description: "Nouveau ban: {player}\nRaison: {reason}\nPendant: {time}"

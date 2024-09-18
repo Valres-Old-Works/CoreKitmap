@@ -44,7 +44,7 @@ class CommandsManager extends BaseManager
     }
 
     public function deleteCommands(): void {
-        $commands = ["ban", "ban-ip", "unban"];
+        $commands = ["ban", "ban-ip", "unban", "unban-ip", "banlist"];
         foreach($commands as $commandName){
             $command = Server::getInstance()->getCommandMap()->getCommand($commandName);
             if($command instanceof Command){

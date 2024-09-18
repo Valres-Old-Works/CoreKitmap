@@ -39,6 +39,7 @@ class BanCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
+        $config = Core::getInstance()->getConfigFile("sanctions-config");
         if(count($args) < 3){
             $sender->sendMessage($this->getUsage());
             return;
@@ -50,7 +51,7 @@ class BanCommand extends Command
 
         $sanctionManager = Core::getInstance()->sanctionsManager;
         if($sanctionManager->isBanned($playerName)){
-            $sender->sendMessage(Core::getInstance()->getConfigFile("sanctions-config")->get("already-ban-message"));
+            $sender->sendMessage($config->get("already-ban-message"));
             return;
         }
 
@@ -60,7 +61,7 @@ class BanCommand extends Command
             $target->kick(str_replace(
                 ["{player}", "{reason}", "{time}", "{author}"],
                 [$playerName, $reason, TimeHelper::timeToString($time), $sender->getName()],
-                Core::getInstance()->getConfigFile("sanctions-config")->get("ban-message")
+                $config->get("ban-message")
             ));
         }
     }

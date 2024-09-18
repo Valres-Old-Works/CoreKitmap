@@ -168,7 +168,7 @@ class SanctionsManager extends BaseManager
     }
 
     public function getBans(): array {
-        return $this->bans;
+        return $this->bans + $this->ipBans + $this->uuidBans;
     }
 
     public function getBan(string $playerName): ?Ban {

@@ -31,8 +31,8 @@ use Valres\CoreKitmap\Core;
 class UuidUnbanCommand extends Command
 {
     public function __construct() {
-        parent::__construct("ip-unban", "Unban IP un joueur", "usage : /ip-unban <player>");
-        $this->setPermission("ip-unban.command");
+        parent::__construct("uuid-unban", "Unban Uuid un joueur", "usage : /uuid-unban <player>");
+        $this->setPermission("uuid-unban.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
@@ -51,7 +51,7 @@ class UuidUnbanCommand extends Command
         }
 
         $sanctionManager = Core::getInstance()->sanctionsManager;
-        $uuids = $altManager->getIPs($playerName);
+        $uuids = $altManager->getUUIDs($playerName);
         foreach($uuids as $uuid){
             if($sanctionManager->isUuidBanned($uuid)){
                 $sanctionManager->removeUuidBan($uuid);

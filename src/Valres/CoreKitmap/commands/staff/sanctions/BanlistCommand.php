@@ -25,36 +25,36 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\Server;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\sanctions\types\Ban;
+use Valres\CoreKitmap\managers\sanctions\types\IPBan;
+use Valres\CoreKitmap\managers\sanctions\types\UuidBan;
+use Valres\CoreKitmap\utils\TimeHelper;
 
-class UnbanCommand extends Command
+class BanlistCommand extends Command
 {
     public function __construct() {
-        parent::__construct("unban", "Unban un joueur", "usage : /unban <player>");
-        $this->setPermission("unban.command");
+        parent::__construct("banlist", "Affiche les bans du serveur", "usage : /banlist");
+        $this->setPermission("banlist.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile("sanctions-config");
-        if(count($args) < 1){
-            $sender->sendMessage($this->getUsage());
-            return;
+        $sanctionsManager = Core::getInstance()->sanctionsManager;
+
+        $message = str_replace("{bans}", strval(count($sanctionsManager->getBans())), $config->get("banlist-title")) . "\n";
+        foreach($sanctionsManager->getBans() as $ban){
+            $type = match($ban::class){
+                Ban::class     => "Ban",
+                IPBan::class   => "IP-Ban",
+                UuidBan::class => "Uuid-Ban"
+            };
+            $message .= str_replace(
+                ["{type}", "{player}", "{date}", "{reason}", "{author}"],
+                [$type, $ban->getPlayerName(), TimeHelper::timestampToDate($ban->getTime()), $ban->getReason(), $ban->getAuthorName()],
+                $config->get("banlist-lines")
+            ) . "\n";
         }
-
-        $playerName = $args[0];
-
-        $sanctionManager = Core::getInstance()->sanctionsManager;
-        if(!$sanctionManager->isBanned($playerName)){
-            $sender->sendMessage($config->get("not-ban-message"));
-            return;
-        }
-
-        $sanctionManager->removeBan($playerName);
-        Server::getInstance()->broadcastMessage(str_replace(
-            ["{player}", "{author}"],
-            [$playerName, $sender->getName()],
-            $config->get("unban-message")
-        ));
+        $sender->sendMessage($message);
     }
 }

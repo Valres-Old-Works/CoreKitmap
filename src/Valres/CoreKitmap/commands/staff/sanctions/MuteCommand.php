@@ -25,36 +25,34 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\Server;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\sanctions\types\Mute;
+use Valres\CoreKitmap\utils\TimeHelper;
 
-class UnbanCommand extends Command
+class MuteCommand extends Command
 {
     public function __construct() {
-        parent::__construct("unban", "Unban un joueur", "usage : /unban <player>");
-        $this->setPermission("unban.command");
+        parent::__construct("mute", "Mute un joueur", "usage : /mute un joueur");
+        $this->setPermission("mute.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile("sanctions-config");
-        if(count($args) < 1){
+        if(count($args) < 3){
             $sender->sendMessage($this->getUsage());
             return;
         }
 
         $playerName = $args[0];
+        $time = TimeHelper::stringToTime($args[1]);
+        $reason = implode(" ", array_slice($args, 2));
 
-        $sanctionManager = Core::getInstance()->sanctionsManager;
-        if(!$sanctionManager->isBanned($playerName)){
-            $sender->sendMessage($config->get("not-ban-message"));
+        $sanctionsManager = Core::getInstance()->sanctionsManager;
+        if($sanctionsManager->isMuted($playerName)){
+            $sender->sendMessage($config->get("already-mute"));
             return;
         }
 
-        $sanctionManager->removeBan($playerName);
-        Server::getInstance()->broadcastMessage(str_replace(
-            ["{player}", "{author}"],
-            [$playerName, $sender->getName()],
-            $config->get("unban-message")
-        ));
+        $sanctionsManager->addMute(new Mute($playerName, $reason, $time, $sender->getName()), true);
     }
 }

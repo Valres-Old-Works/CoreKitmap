@@ -28,11 +28,11 @@ use pocketmine\command\CommandSender;
 use pocketmine\Server;
 use Valres\CoreKitmap\Core;
 
-class UnbanCommand extends Command
+class UnmuteCommand extends Command
 {
     public function __construct() {
-        parent::__construct("unban", "Unban un joueur", "usage : /unban <player>");
-        $this->setPermission("unban.command");
+        parent::__construct("unmute", "Unmute un joueur", "usage : /unmute <player>");
+        $this->setPermission("unmute.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
@@ -50,7 +50,7 @@ class UnbanCommand extends Command
             return;
         }
 
-        $sanctionManager->removeBan($playerName);
+        $sanctionManager->removeMute($playerName);
         Server::getInstance()->broadcastMessage(str_replace(
             ["{player}", "{author}"],
             [$playerName, $sender->getName()],

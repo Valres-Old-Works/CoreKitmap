@@ -5,7 +5,12 @@ version: 0.0.1
 main: Valres\CoreKitmap\Core
 
 permissions:
+  #Sanctions :
+  alias.command:
+    default: op
   ban.command:
+    default: op
+  banlist.command:
     default: op
   blacklist.command:
     default: op
@@ -15,7 +20,13 @@ permissions:
     default: op
   ip-unban.command:
     default: op
+  mute.command:
+    default: op
+  mutelist.command:
+    default: op
   unban.command:
+    default: op
+  unmute.command:
     default: op
   uuid-ban.command:
     default: op
