@@ -13,6 +13,15 @@ permissions:
     default: op
   gradelist.command:
     default: op
+  #Money     :
+  mymoney.command:
+    default: true
+  pay.command:
+    default: true
+  seemoney.command:
+    default: true
+  topmoney.command:
+    default: true
   #Sanctions :
   alias.command:
     default: op

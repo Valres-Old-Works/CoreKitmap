@@ -61,8 +61,12 @@ class MoneyManager extends BaseManager
         return array_key_exists($playerName, $this->moneys);
     }
 
-    public function create(string $playerName): void {
+    public function register(string $playerName): void {
         $this->moneys[$playerName] = $this->config->get("default-money");
+    }
+
+    public function getMoneys(): array {
+        return $this->moneys;
     }
 
     public function getMoney(string $playerName): ?float {

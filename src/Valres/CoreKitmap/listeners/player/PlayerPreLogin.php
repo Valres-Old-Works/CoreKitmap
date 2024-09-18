@@ -72,5 +72,10 @@ class PlayerPreLogin implements Listener
         if(!$altAccountsManager->exist($name)){
             $altAccountsManager->register($name, $ip, $uuid);
         }
+
+        $moneyManager = Core::getInstance()->moneyManager;
+        if(!$moneyManager->exist($name)){
+            $moneyManager->register($name);
+        }
     }
 }

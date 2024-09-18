@@ -30,6 +30,7 @@ use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\grades\Grade;
 use Valres\CoreKitmap\managers\grades\GradesManager;
 use Valres\CoreKitmap\managers\listeners\ListenersManager;
+use Valres\CoreKitmap\managers\money\MoneyManager;
 use Valres\CoreKitmap\managers\sanctions\SanctionsManager;
 
 trait InitTrait
@@ -40,6 +41,7 @@ trait InitTrait
     public FilesManager     $filesManager;
     public GradesManager    $gradesManager;
     public ListenersManager $listenersManager;
+    public MoneyManager     $moneyManager;
     public SanctionsManager $sanctionsManager;
 
     public function initAll(): void {
@@ -49,6 +51,7 @@ trait InitTrait
         $this->commandsManager  = new CommandsManager();
         $this->gradesManager    = new GradesManager();
         $this->listenersManager = new ListenersManager();
+        $this->moneyManager     = new MoneyManager();
         $this->sanctionsManager = new SanctionsManager();
     }
 }

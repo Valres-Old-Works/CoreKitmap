@@ -19,33 +19,28 @@
  * @version v0.0.1
  */
 
-namespace Valres\CoreKitmap\managers\files;
+declare(strict_types=1);
 
-use Valres\CoreKitmap\managers\BaseManager;
+namespace Valres\CoreKitmap\commands\player\money;
 
-class FilesManager extends BaseManager
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\player\Player;
+use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
+
+class MymoneyCommand extends Command
 {
-    const COMBAT    = "configs/combat-config";
-    const GRADES    = "configs/grades-config";
-    const SANCTIONS = "configs/sanctions-config";
-    const MONEY     = "configs/money-config";
-
-    public function getName(): string {
-        return "Files";
+    public function __construct() {
+        parent::__construct("mymoney", "Voir ta money", "usage : /mymoney");
+        $this->setPermission("mymoney.command");
     }
 
-    public function load(): void {
-        $files = [
-            "sanctions/bans", "sanctions/IPBans", "sanctions/uuidBans", "sanctions/mutes", "sanctions/blacklist", "configs/sanctions-config",
-            "altAccounts/altAccounts",
-            "grades/grades", "configs/grades-config", "configs/combat-config",
-            "moneys/moneys", "configs/money-config"
-        ];
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void {
+        $moneyManager = Core::getInstance()->moneyManager;
+        $config = Core::getInstance()->getConfigFile(FilesManager::MONEY);
+        if(!$sender instanceof Player) return;
 
-        foreach($files as $file){
-            $this->getPlugin()->saveResource($file . ".yml");
-        }
+        $sender->sendMessage(str_replace("{money}", strval($moneyManager->getMoney($sender->getName())), $config->get("mymoney-message")));
     }
-
-    public function save(): void {}
 }

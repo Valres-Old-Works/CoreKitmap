@@ -1,1 +1,18 @@
 default-money: 2000
+
+mymoney-message: "Votre money : {money}"
+seemoney-message: "Money de {player} : {money}"
+not-valid-number-message: "§cLe montant doit être un nombre positif."
+no-player-message: "§cCe joueur n'existe pas."
+no-money-message: "§cVous n'avez pas assez de money."
+player-pay-message: "§aVous venez de payer {amount} à {target}."
+target-pay-message: "§aVous avez reçu {amount} de {player}."
+topmoney-no-page: "§cIl n'y à pas autant de pages."
+topmoney-title: "Voiçi le top 10 money:"
+topmoney-lines: "#{rank} - {player} : ${money}"
+player-add-money-message: "§aVous venez d'ajouté {amount} à {target}."
+target-add-money-message: "§a{player} vous à ajouté {amount}."
+player-reduce-money-message: "§aVous venez de retiré {amount} à {target}."
+target-reduce-money-message: "§a{player} vous à retiré {amount}."
+player-set-money-message: "§aVous venez de définir {amount} à {target}."
+target-set-money-message: "§a{player} vous à défini {amount} comme argent."
