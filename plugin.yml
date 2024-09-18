@@ -24,6 +24,8 @@ permissions:
     default: op
   mutelist.command:
     default: op
+  unbanall.command:
+    default: op
   unban.command:
     default: op
   unmute.command:
