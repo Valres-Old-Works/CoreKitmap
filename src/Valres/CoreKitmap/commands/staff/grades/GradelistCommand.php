@@ -27,15 +27,26 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Valres\CoreKitmap\Core;
 use Valres\CoreKitmap\managers\files\FilesManager;
+use Valres\CoreKitmap\managers\grades\Grade;
 
 class GradelistCommand extends Command
 {
     public function __construct() {
-        parent::__construct("gradelist.command", "Affiche tout les grades", "usage : /gradelist");
+        parent::__construct("gradelist", "Affiche tout les grades", "usage : /gradelist");
         $this->setPermission("gradelist.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile(FilesManager::GRADES);
+        $gradesManager = Core::getInstance()->gradesManager;
+
+        $message = str_replace(
+            ["{grades}", "{gradelist}"],
+            [strval(count($gradesManager->getGrades())), implode(", ", array_map(function(Grade $grade): string {
+                return $grade->getName();
+            }, $gradesManager->getGrades()))],
+            $config->get("gradelist-message")
+        );
+        $sender->sendMessage($message);
     }
 }

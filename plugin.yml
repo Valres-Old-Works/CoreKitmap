@@ -5,6 +5,11 @@ version: 0.0.1
 main: Valres\CoreKitmap\Core
 
 permissions:
+  #Grades    :
+  addgrade.command:
+    default: op
+  gradelist.command:
+    default: op
   #Sanctions :
   alias.command:
     default: op

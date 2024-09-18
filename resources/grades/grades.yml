@@ -1,1 +1,8 @@
-[]
+joueur:
+  displayName: Joueur
+  chatFormat: '§l§8{§r§7Joueur§l§8}§r§7 | {name} §8:§7 {message}'
+  nametagFormat: '§7{name}'
+  color: §7
+  permissions:
+    - kit.joueur
+    - timereward.joueur

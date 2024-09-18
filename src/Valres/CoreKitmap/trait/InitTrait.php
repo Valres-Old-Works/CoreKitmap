@@ -26,6 +26,8 @@ namespace Valres\CoreKitmap\trait;
 use Valres\CoreKitmap\managers\alt\AltAccountManager;
 use Valres\CoreKitmap\managers\commands\CommandsManager;
 use Valres\CoreKitmap\managers\files\FilesManager;
+use Valres\CoreKitmap\managers\grades\Grade;
+use Valres\CoreKitmap\managers\grades\GradesManager;
 use Valres\CoreKitmap\managers\listeners\ListenersManager;
 use Valres\CoreKitmap\managers\sanctions\SanctionsManager;
 
@@ -34,6 +36,7 @@ trait InitTrait
     public AltAccountManager $accountManager;
     public CommandsManager  $commandsManager;
     public FilesManager     $filesManager;
+    public GradesManager    $gradesManager;
     public ListenersManager $listenersManager;
     public SanctionsManager $sanctionsManager;
 
@@ -41,6 +44,7 @@ trait InitTrait
         $this->filesManager     = new FilesManager();
         $this->accountManager   = new AltAccountManager();
         $this->commandsManager  = new CommandsManager();
+        $this->gradesManager    = new GradesManager();
         $this->listenersManager = new ListenersManager();
         $this->sanctionsManager = new SanctionsManager();
     }
