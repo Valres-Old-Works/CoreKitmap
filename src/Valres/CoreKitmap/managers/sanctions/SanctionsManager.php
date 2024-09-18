@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Valres\CoreKitmap\managers\sanctions;
 
 use JsonException;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use Valres\CoreKitmap\libs\AtomDiscordAPI\Embed;
@@ -234,6 +235,9 @@ class SanctionsManager extends BaseManager
         $player_ = Server::getInstance()->getPlayerExact($player);
         if(!$player_ instanceof CustomPlayer){
             $offlinedata = Server::getInstance()->getOfflinePlayerData($player);
+            if(!$offlinedata instanceof CompoundTag){
+                return;
+            }
             /** @var CasierJudiciaire $casier */
             $casier = unserialize($offlinedata->getString("casier"));
             $casier->addBan($ban);
@@ -312,5 +316,13 @@ class SanctionsManager extends BaseManager
             $playerName,
             $this->config->get("unmute-message")
         ));
+    }
+
+    public function isBlacklist(string ...$value): bool {
+        return in_array($value, $this->blacklists);
+    }
+
+    public function addToBlacklist(string $value): void {
+        $this->blacklists[] = $value;
     }
 }
