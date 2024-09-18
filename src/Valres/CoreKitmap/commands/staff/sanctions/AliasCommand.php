@@ -25,6 +25,7 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use Valres\CoreKitmap\Core;
 
 class AliasCommand extends Command
 {
@@ -33,8 +34,51 @@ class AliasCommand extends Command
         $this->setPermission("alias.command");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args)
-    {
-        // TODO: Implement execute() method.
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void {
+        $config = Core::getInstance()->getConfigFile("sanctions-config");
+
+        if (count($args) < 1) {
+            $sender->sendMessage($this->getUsage());
+            return;
+        }
+
+        $target = $args[0];
+        $altManager = Core::getInstance()->accountManager;
+
+        if (!$altManager->exist($target)) {
+            $sender->sendMessage($config->get("no-players"));
+            return;
+        }
+
+        $pseudos = [];
+        $ips = $altManager->getIPs($target);
+        $uuids = $altManager->getUUIDs($target);
+
+        foreach($ips as $ip){
+            $pseudos = array_merge($pseudos, $altManager->getPseudoByIP($ip));
+        }
+
+        foreach($uuids as $uuid){
+            $pseudos = array_merge($pseudos, $altManager->getPseudoByUuid($uuid));
+        }
+
+        $pseudos = array_unique($pseudos);
+
+        $message  = str_replace("{player}", $target, $config->get("alias-title")) . "\n";
+        $message .= $config->get("alias-account-title") . "\n";
+        foreach($pseudos as $pseudo){
+            $message .= str_replace("{pseudo}", $pseudo, $config->get("alias-account-lines")) . "\n";
+        }
+        $message .= $config->get("alias-ip-title") . "\n";
+        foreach($ips as $ip){
+            $message .= str_replace("{ip}", $ip, $config->get("alias-ip-lines")) . "\n";
+        }
+        $message .= $config->get("alias-uuid-title") . "\n";
+        foreach($uuids as $uuid){
+            $message .= str_replace("{uuid}", $uuid, $config->get("alias-uuid-lines")) . "\n";
+        }
+
+        $sender->sendMessage($message);
     }
+
 }

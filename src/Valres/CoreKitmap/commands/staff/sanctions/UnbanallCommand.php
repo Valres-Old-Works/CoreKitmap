@@ -26,47 +26,29 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\sanctions\types\Ban;
+use Valres\CoreKitmap\managers\sanctions\types\IPBan;
+use Valres\CoreKitmap\managers\sanctions\types\UuidBan;
 
-class BlacklistCommand extends Command
+class UnbanallCommand extends Command
 {
     public function __construct() {
-        parent::__construct("blacklist", "Blacklist toutes les IPs et Uuids d'un joueur", "usage : /blacklist <player>");
-        $this->setPermission("blacklist.command");
+        parent::__construct("unbanall", "Unban tout les joueurs (sauf les blacklist)", "usage : /unbanall");
+        $this->setPermission("unbanall.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile("sanctions-config");
-        if(count($args) < 1){
-            $sender->sendMessage($this->getUsage());
-            return;
+
+        $sanctionManager = Core::getInstance()->sanctionsManager;
+        foreach($sanctionManager->getBans() as $key => $ban){
+            match($ban::class){
+                Ban::class     => $sanctionManager->removeBan($key),
+                IPBan::class   => $sanctionManager->removeIPBan($key),
+                UuidBan::class => $sanctionManager->removeUuidBan($key)
+            };
         }
 
-        $target = $args[0];
-        $altManager = Core::getInstance()->accountManager;
-        if(!$altManager->exist($target)){
-            $sender->sendMessage($config->get("no-players"));
-            return;
-        }
-
-        $blacklisteds = [];
-        foreach($altManager->getIPs($target) as $ip){
-            $blacklisteds[] = $ip;
-            foreach($altManager->getPseudoByIP($ip) as $pseudo){
-                $blacklisteds[] = $pseudo;
-            }
-        }
-        foreach($altManager->getUUIDs($target) as $uuid){
-            $blacklisteds[] = $uuid;
-            foreach($altManager->getPseudoByUuid($uuid) as $pseudo){
-                $blacklisteds[] = $pseudo;
-            }
-        }
-
-        $sanctionsManager = Core::getInstance()->sanctionsManager;
-        foreach($blacklisteds as $blacklisted){
-            $sanctionsManager->addToBlacklist($blacklisted);
-        }
-
-        $sender->sendMessage(str_replace("{player}", $target, $config->get("blacklist")));
+        $sender->sendMessage($config->get("unban-all-message"));
     }
 }
