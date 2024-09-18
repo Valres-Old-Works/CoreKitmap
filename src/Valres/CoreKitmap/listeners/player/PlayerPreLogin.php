@@ -31,11 +31,18 @@ use Valres\CoreKitmap\utils\TimeHelper;
 class PlayerPreLogin implements Listener
 {
     public function onEvent(Event $event): void {
-        $name = $event->getPlayerInfo()->getUsername();
-        $uuid = $event->getPlayerInfo()->getUuid()->toString();
-        $ip   = $event->getIp();
+        $name   = $event->getPlayerInfo()->getUsername();
+        $uuid   = $event->getPlayerInfo()->getUuid()->toString();
+        $ip     = $event->getIp();
+        $config = Core::getInstance()->getConfigFile("sanctions-config");
 
         $sanctionsManager = Core::getInstance()->sanctionsManager;
+
+        if($sanctionsManager->isBlacklist($name, $ip, $uuid)){
+            $event->setKickFlag(Event::KICK_FLAG_BANNED, $config->get("blacklist-login-message"));
+            return;
+        }
+
         $ban = null;
         if($sanctionsManager->isBanned($name)){
             $ban = $sanctionsManager->getBan($name);
@@ -56,7 +63,7 @@ class PlayerPreLogin implements Listener
             $event->setKickFlag(Event::KICK_FLAG_BANNED, str_replace(
                 ["{reason}", "{time}", "{author}"],
                 [$ban->getReason(), TimeHelper::timeToString($ban->getTime()), $ban->getAuthorName()],
-                Core::getInstance()->getConfigFile("sanctions-config")->get("ban-login-message")
+                $config->get("ban-login-message")
             ));
         }
 
