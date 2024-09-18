@@ -22,6 +22,8 @@
 namespace Valres\CoreKitmap\player;
 
 use pocketmine\entity\Location;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\NetworkSession;
@@ -40,6 +42,9 @@ class CustomPlayer extends Player
     private PermissionAttachment $permissions;
 
     private CasierJudiciaire $casierJudiciaire;
+
+    private bool $inFight = false;
+    private int $fightTime = 0;
 
     public function __construct(Server $server, NetworkSession $session, PlayerInfo $playerInfo, bool $authenticated, Location $spawnLocation, ?CompoundTag $namedtag) {
         parent::__construct($server, $session, $playerInfo, $authenticated, $spawnLocation, $namedtag);
@@ -84,5 +89,48 @@ class CustomPlayer extends Player
 
     public function getCasierJudiciaire(): CasierJudiciaire {
         return $this->casierJudiciaire;
+    }
+
+    public function onUpdate(int $currentTick): bool {
+        if($this->isInFight() and $this->fightTime <= time()) $this->updateFight(false);
+        return parent::onUpdate($currentTick);
+    }
+
+    public function attack(EntityDamageEvent $source): void {
+        parent::attack($source);
+        if($source->isCancelled()) return;
+
+        if($source instanceof EntityDamageByEntityEvent){
+            $damager = $source->getDamager();
+            if($damager instanceof $this){
+                $this->updateFight();
+                $damager->updateFight();
+            }
+        }
+    }
+
+    public function isInFight(): bool {
+        return $this->inFight;
+    }
+
+    public function updateFight(bool $value = true): void {
+        $config = Core::getInstance()->getConfigFile(FilesManager::COMBAT);
+        if($value){
+            if(!$this->isInFight()){
+                $this->sendMessage($config->get("in-combat-message"));
+                $this->inFight = true;
+            }
+            $this->fightTime = time() + Core::getInstance()->combatManager->getCombatTime();
+        } else {
+            $this->sendMessage($config->get("out-combat-message"));
+            $this->inFight = false;
+        }
+    }
+
+    protected function onDeath(): void {
+        parent::onDeath();
+        if($this->isInFight()){
+            $this->updateFight(false);
+        }
     }
 }

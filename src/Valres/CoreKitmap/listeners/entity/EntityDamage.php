@@ -19,31 +19,25 @@
  * @version v0.0.1
  */
 
-namespace Valres\CoreKitmap\managers\files;
+declare(strict_types=1);
 
-use Valres\CoreKitmap\managers\BaseManager;
+namespace Valres\CoreKitmap\listeners\entity;
 
-class FilesManager extends BaseManager
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\Listener;
+use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\player\CustomPlayer;
+
+class EntityDamage implements Listener
 {
-    const COMBAT    = "configs/combat-config";
-    const GRADES    = "configs/grades-config";
-    const SANCTIONS = "configs/sanctions-config";
+    public function onDamage(EntityDamageByEntityEvent $event): void {
+        $combatManager = Core::getInstance()->combatManager;
+        $victim        = $event->getEntity();
+        $damager       = $event->getDamager();
 
-    public function getName(): string {
-        return "Files";
+        if(!$victim instanceof CustomPlayer or !$damager instanceof CustomPlayer) return;
+
+        $event->setAttackCooldown($combatManager->getAttackCooldown());
+        $event->setKnockBack($combatManager->getKnockback());
     }
-
-    public function load(): void {
-        $files = [
-            "sanctions/bans", "sanctions/IPBans", "sanctions/uuidBans", "sanctions/mutes", "sanctions/blacklist", "configs/sanctions-config",
-            "altAccounts/altAccounts",
-            "grades/grades", "configs/grades-config", "configs/combat-config"
-        ];
-
-        foreach($files as $file){
-            $this->getPlugin()->saveResource($file . ".yml");
-        }
-    }
-
-    public function save(): void {}
 }

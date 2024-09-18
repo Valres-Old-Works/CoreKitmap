@@ -21,20 +21,19 @@
 
 declare(strict_types=1);
 
-namespace Valres\CoreKitmap\commands\staff\grades;
+namespace Valres\CoreKitmap\commands\staff\combat;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use Valres\CoreKitmap\Core;
 use Valres\CoreKitmap\libs\jojoe77777\FormAPI\CustomForm;
-use Valres\CoreKitmap\managers\grades\Grade;
 
-class AddgradeCommand extends Command
+class ChangeKnockbackCommand extends Command
 {
     public function __construct() {
-        parent::__construct("addgrade", "Créer un grade", "usage : /addgrade");
-        $this->setPermission("addgrade.command");
+        parent::__construct("change-kb", "Change les knockback");
+        $this->setPermission("change-kb.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
@@ -43,42 +42,42 @@ class AddgradeCommand extends Command
         $this->sendForm($sender);
     }
 
-    public function sendForm(Player $player, array $missings = []): void {
+    public function sendForm(Player $player, array $missings = [], array $errors = []): void {
         $form = new CustomForm(function(Player $player, array $data = null): void {
             if(is_null($data)) return;
 
-            $missings      = [];
+            $errors   = [];
+            $missings = [];
 
-            $id            = $data[1];
-            $name          = $data[2];
-            $chatFormat    = $data[3];
-            $nametagFormat = $data[4];
-            $color         = $data[5];
+            $knockback      = $data[1];
+            $attackCooldown = $data[2];
 
-            if ($id === "")            $missings[] = "Identifiant";
-            if ($name === "")          $missings[] = "Nom";
-            if ($chatFormat === "")    $missings[] = "Format dans le chat";
-            if ($nametagFormat === "") $missings[] = "Format du nametag";
-            if ($color === "")         $missings[] = "Couleur";
+            if(!is_numeric($knockback))    $errors[] = "Les KB doivents être un chiffre à virgule.";
+            if(!is_numeric($attackCooldown)) $errors[] = "L'attack-cooldown doit être un chiffre entier.";
 
-            if(!empty($missings)){
-                $this->sendForm($player, $missings);
+            if($knockback === "")      $missings[] = "Knockback";
+            if($attackCooldown === "") $missings[] = "Attack-cooldown";
+
+            if(!empty($errors) or !empty($missings)){
+                $this->sendForm($player, $missings, $errors);
                 return;
             }
 
-            Core::getInstance()->gradesManager->addGrade(new Grade($id, $name, $chatFormat, $nametagFormat, $color, []));
+            $combatManager = Core::getInstance()->combatManager;
+            $combatManager->setKnockback(floatval($knockback));
+            $combatManager->setAttackCooldown(intval($attackCooldown));
         });
-        $form->setTitle("Grade > Add");
+        $form->setTitle("Knockback");
         $content = "Veuillez remplir tout les champs.";
         if(!empty($missings)){
-            $content .= "\n§cLes champs suivants sont manquants :\n" . implode("\n- ", $missings);
+            $content .= "\n§cLes champs suivants sont manquants : " . implode(", ", $missings);
+        }
+        if(!empty($errors)){
+            $content .= "\n§cErreurs :\n-" . implode("\n-", $errors);
         }
         $form->addLabel($content);
-        $form->addInput("Identifiant :", "Exemple: joueur");
-        $form->addInput("Nom :", "Exemple: Joueur");
-        $form->addInput("Format dans le chat :");
-        $form->addInput("Format du nametag :");
-        $form->addInput("Couleur :", "Exemple: \§4");
+        $form->addInput("Knockback :", "Exemple : 0.37");
+        $form->addInput("Attack-cooldown :", "Exemple : 8");
         $player->sendForm($form);
     }
 }

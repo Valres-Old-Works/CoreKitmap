@@ -31,6 +31,7 @@ use Valres\CoreKitmap\libs\AtomDiscordAPI\Embed;
 use Valres\CoreKitmap\libs\AtomDiscordAPI\Message;
 use Valres\CoreKitmap\libs\AtomDiscordAPI\Webhook;
 use Valres\CoreKitmap\managers\BaseManager;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\sanctions\types\Ban;
 use Valres\CoreKitmap\managers\sanctions\types\IPBan;
 use Valres\CoreKitmap\managers\sanctions\types\Mute;
@@ -158,7 +159,7 @@ class SanctionsManager extends BaseManager
     private function init(): void {
         $plugin = $this->getPlugin();
 
-        $this->config         = new Config($plugin->getDataFolder() . "sanctions-config.yml", Config::YAML);
+        $this->config         = $this->getPlugin()->getConfigFile(FilesManager::SANCTIONS);
         $this->bansData       = new Config($plugin->getDataFolder() . "sanctions/bans.yml", Config::YAML);
         $this->IPBansData     = new Config($plugin->getDataFolder() . "sanctions/IPBans.yml", Config::YAML);
         $this->uuidBansData   = new Config($plugin->getDataFolder() . "sanctions/uuidBans.yml", Config::YAML);

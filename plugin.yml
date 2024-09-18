@@ -5,6 +5,9 @@ version: 0.0.1
 main: Valres\CoreKitmap\Core
 
 permissions:
+  #Combat    :
+  change-kb.command:
+    default: op
   #Grades    :
   addgrade.command:
     default: op

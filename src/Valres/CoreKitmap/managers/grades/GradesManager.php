@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\managers\grades;
 use JsonException;
 use pocketmine\utils\Config;
 use Valres\CoreKitmap\managers\BaseManager;
+use Valres\CoreKitmap\managers\files\FilesManager;
 
 class GradesManager extends BaseManager
 {
@@ -38,7 +39,7 @@ class GradesManager extends BaseManager
     }
 
     public function load(): void {
-        $this->datas = $this->getPlugin()->getConfigFile("grades/grades.yml");
+        $this->datas = $this->getPlugin()->getConfigFile("grades/grades");
 
         foreach($this->datas->getAll() as $name => $data){
             $this->grades[$name] = new Grade($name, $data["displayName"], $data["chatFormat"], $data["nametagFormat"], $data["color"], $data["permissions"]);

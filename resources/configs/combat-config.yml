@@ -1,0 +1,7 @@
+combat-time: 10
+in-combat-message: "§cVous êtes en combat !"
+out-combat-message: "§cVous n'êtes plus en combat !"
+no-commands-message: "§cVous ne pouvez pas faire de commandes en combat."
+
+knockback: 0.37
+attack-cooldown: 8
