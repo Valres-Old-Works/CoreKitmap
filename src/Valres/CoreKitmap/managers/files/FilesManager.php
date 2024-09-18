@@ -28,6 +28,7 @@ class FilesManager extends BaseManager
     const COMBAT    = "configs/combat-config";
     const GRADES    = "configs/grades-config";
     const SANCTIONS = "configs/sanctions-config";
+    const MONEY     = "configs/money-config";
 
     public function getName(): string {
         return "Files";
