@@ -27,6 +27,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Server;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 
 class IPUnbanCommand extends Command
 {
@@ -36,7 +37,7 @@ class IPUnbanCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
         if(count($args) < 1){
             $sender->sendMessage($this->getUsage());
             return;

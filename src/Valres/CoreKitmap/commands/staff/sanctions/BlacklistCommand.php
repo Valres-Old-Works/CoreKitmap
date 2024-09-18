@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 
 class BlacklistCommand extends Command
 {
@@ -35,7 +36,7 @@ class BlacklistCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
         if(count($args) < 1){
             $sender->sendMessage($this->getUsage());
             return;

@@ -19,30 +19,46 @@
  * @version v0.0.1
  */
 
-namespace Valres\CoreKitmap\managers\files;
+declare(strict_types=1);
 
-use Valres\CoreKitmap\managers\BaseManager;
+namespace Valres\CoreKitmap\managers\grades;
 
-class FilesManager extends BaseManager
+class Grade
 {
-    const GRADES    = "configs/grades-config";
-    const SANCTIONS = "configs/sanctions-config";
+    public function __construct(
+        protected string $name,
+        protected string $displayName,
+        protected string $chatFormat,
+        protected string $nametagFormat,
+        protected string $color,
+        protected array  $permissions
+    ){}
 
     public function getName(): string {
-        return "Files";
+        return $this->name;
     }
 
-    public function load(): void {
-        $files = [
-            "sanctions/bans", "sanctions/IPBans", "sanctions/uuidBans", "sanctions/mutes", "sanctions/blacklist", "configs/sanctions-config",
-            "altAccounts/altAccounts",
-            "grades/grades", "configs/grades-config"
-        ];
-
-        foreach($files as $file){
-            $this->getPlugin()->saveResource($file . ".yml");
-        }
+    public function getColoredName(): string {
+        return $this->color . $this->displayName;
     }
 
-    public function save(): void {}
+    public function getDisplayName(): string {
+        return $this->displayName;
+    }
+
+    public function getChatFormat(): string {
+        return $this->chatFormat;
+    }
+
+    public function getNametagFormat(): string {
+        return $this->nametagFormat;
+    }
+
+    public function getColor(): string {
+        return $this->color;
+    }
+
+    public function getPermissions(): array {
+        return $this->permissions;
+    }
 }

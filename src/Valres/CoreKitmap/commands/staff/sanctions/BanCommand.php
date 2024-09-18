@@ -28,6 +28,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\sanctions\types\Ban;
 use Valres\CoreKitmap\utils\TimeHelper;
 
@@ -39,7 +40,7 @@ class BanCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
         if(count($args) < 3){
             $sender->sendMessage($this->getUsage());
             return;

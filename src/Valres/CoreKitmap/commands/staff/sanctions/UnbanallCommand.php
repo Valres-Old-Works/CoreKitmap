@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\sanctions\types\Ban;
 use Valres\CoreKitmap\managers\sanctions\types\IPBan;
 use Valres\CoreKitmap\managers\sanctions\types\UuidBan;
@@ -38,7 +39,7 @@ class UnbanallCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
 
         $sanctionManager = Core::getInstance()->sanctionsManager;
         foreach($sanctionManager->getBans() as $key => $ban){

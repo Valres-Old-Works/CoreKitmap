@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\listeners\player;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent as Event;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\utils\TimeHelper;
 
 class PlayerChat implements Listener
@@ -45,7 +46,7 @@ class PlayerChat implements Listener
             $player->sendMessage(str_replace(
                 ["{time}", "{reason}"],
                 [TimeHelper::timeToString($mute->getTime()), $mute->getReason()],
-                Core::getInstance()->getConfigFile("sanctions-config")->get("mute-player-message")
+                Core::getInstance()->getConfigFile(FilesManager::SANCTIONS)->get("mute-player-message")
             ));
         }
 

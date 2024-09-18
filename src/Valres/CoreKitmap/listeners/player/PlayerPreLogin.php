@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\listeners\player;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerPreLoginEvent as Event;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\utils\TimeHelper;
 
 class PlayerPreLogin implements Listener
@@ -34,11 +35,11 @@ class PlayerPreLogin implements Listener
         $name   = $event->getPlayerInfo()->getUsername();
         $uuid   = $event->getPlayerInfo()->getUuid()->toString();
         $ip     = $event->getIp();
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
 
         $sanctionsManager = Core::getInstance()->sanctionsManager;
 
-        if($sanctionsManager->isBlacklist($name, $ip, $uuid)){
+        if($sanctionsManager->isBlacklist($name) or $sanctionsManager->isBlacklist($ip) or $sanctionsManager->isBlacklist($uuid)){
             $event->setKickFlag(Event::KICK_FLAG_BANNED, $config->get("blacklist-login-message"));
             return;
         }

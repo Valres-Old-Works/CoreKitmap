@@ -30,7 +30,7 @@ alias-uuid-title: "Uuids liées à ce pseudo:"
 alias-uuid-lines: "- {uuid}"
 
 blacklist: "§cTout les comptes possible de {player} viennent d'être blacklist."
-blacklist-login-message: "Tout vos comptes/IPs ont été blacklist de ce serveur."
+blacklist-login-message: "§cTout vos comptes/IPs ont été blacklist de ce serveur."
 
 already-ban-message: "§cCe joueur est déja ban."
 not-ban-message: "§cCe joueur n'est pas ban."

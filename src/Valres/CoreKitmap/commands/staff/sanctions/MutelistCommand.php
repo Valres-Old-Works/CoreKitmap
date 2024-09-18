@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\sanctions\types\Ban;
 use Valres\CoreKitmap\managers\sanctions\types\IPBan;
 use Valres\CoreKitmap\managers\sanctions\types\UuidBan;
@@ -39,7 +40,7 @@ class MutelistCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
         $sanctionsManager = Core::getInstance()->sanctionsManager;
 
         $message = str_replace("{bans}", strval(count($sanctionsManager->getBans())), $config->get("banlist-title"));

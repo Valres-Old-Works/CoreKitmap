@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\commands\staff\sanctions;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\sanctions\types\Mute;
 use Valres\CoreKitmap\utils\TimeHelper;
 
@@ -37,7 +38,7 @@ class MuteCommand extends Command
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
-        $config = Core::getInstance()->getConfigFile("sanctions-config");
+        $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
         if(count($args) < 3){
             $sender->sendMessage($this->getUsage());
             return;

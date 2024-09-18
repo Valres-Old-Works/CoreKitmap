@@ -146,9 +146,7 @@ class SanctionsManager extends BaseManager
             ]);
         }
 
-        foreach($this->blacklists as $data){
-            $this->blacklistsData->set($data);
-        }
+        $this->blacklistsData->setAll($this->blacklists);
 
         $this->bansData->save();
         $this->IPBansData->save();
@@ -321,7 +319,7 @@ class SanctionsManager extends BaseManager
         ));
     }
 
-    public function isBlacklist(string ...$value): bool {
+    public function isBlacklist(string $value): bool {
         return in_array($value, $this->blacklists);
     }
 
