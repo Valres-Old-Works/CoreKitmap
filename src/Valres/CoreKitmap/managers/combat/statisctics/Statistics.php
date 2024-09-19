@@ -34,8 +34,16 @@ class Statistics
         return $this->kills;
     }
 
+    public function addKill(): void {
+        $this->kills++;
+    }
+
     public function getDeath(): int {
         return $this->deaths;
+    }
+
+    public function addDeath(): void {
+        $this->deaths++;
     }
 
     public function getKDR(): float {

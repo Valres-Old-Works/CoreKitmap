@@ -5,6 +5,8 @@ version: 0.0.1
 main: Valres\CoreKitmap\Core
 
 permissions:
+  settings.command:
+    default: true
   #Combat    :
   stats.command:
     default: op

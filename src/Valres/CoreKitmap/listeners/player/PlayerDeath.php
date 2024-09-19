@@ -21,37 +21,27 @@
 
 declare(strict_types=1);
 
-namespace Valres\CoreKitmap\listeners\entity;
+namespace Valres\CoreKitmap\listeners\player;
 
-use pocketmine\block\VanillaBlocks;
-use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
-use pocketmine\item\VanillaItems;
+use pocketmine\event\player\PlayerDeathEvent as Event;
 use Valres\CoreKitmap\Core;
 use Valres\CoreKitmap\player\CustomPlayer;
 
-class EntityDamage implements Listener
+class PlayerDeath implements Listener
 {
-    public function onDamage(EntityDamageByEntityEvent $event): void {
-        $combatManager = Core::getInstance()->combatManager;
-        $victim        = $event->getEntity();
-        $damager       = $event->getDamager();
+    public function onEvent(Event $event): void {
+        $player  = $event->getPlayer();
+        $cause   = $player->getLastDamageCause();
 
-        if(!$victim instanceof CustomPlayer or !$damager instanceof CustomPlayer) return;
+        if(!$cause instanceof EntityDamageByEntityEvent) return;
+        $damager = $cause->getDamager();
 
-        $event->setAttackCooldown($combatManager->getAttackCooldown());
-        $event->setKnockBack($combatManager->getKnockback());
+        if(!$player instanceof CustomPlayer or !$damager instanceof CustomPlayer) return;
+        $statsManager = Core::getInstance()->statisticsManager;
 
-        $damager->updateFight();
-        $victim->updateFight();
-
-        $damager->getCombatInterface()->addCombo();
-        $victim->getCombatInterface()->resetCombo();
-
-        $distance = $damager->getPosition()->distance($victim->getPosition());
-        $damager->getCombatInterface()->setReach(min($distance, 3.0));
-
-        $damager->sendCombatInterface();
+        $statsManager->getStats($damager->getName())->addKill();
+        $statsManager->getStats($player->getName())->addDeath();
     }
 }

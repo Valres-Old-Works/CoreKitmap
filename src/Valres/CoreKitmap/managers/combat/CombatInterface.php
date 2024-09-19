@@ -57,7 +57,7 @@ class CombatInterface
     }
 
     public function getReach(): float {
-        return $this->reach;
+        return round($this->reach, 2);
     }
 
     public function setReach(float $reach): void {
