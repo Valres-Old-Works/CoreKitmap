@@ -21,34 +21,46 @@
 
 declare(strict_types=1);
 
-namespace Valres\CoreKitmap\managers\combat\settings;
+namespace Valres\CoreKitmap\managers\combat;
 
-use Ahc\Json\Comment;
-use pocketmine\player\Player;
-use Valres\CoreKitmap\managers\BaseManager;
-
-class CombatSettingManager extends BaseManager
+class CombatInterface
 {
-    /** @var CombatInterface[] */
-    private array $interfaces = [];
+    public function __construct(
+        protected array $cps    = [],
+        protected int   $combos = 0,
+        protected float $reach  = 0.0
+    ) {}
 
-    public function getName(): string {
-        return "Combat Settings";
+    public function getCps(): int {
+        return count(array_filter($this->cps, function($timestamp): bool {
+            return (microtime(true) - $timestamp) <= 1;
+        }));
     }
 
-    public function load(): void {}
-
-    public function save(): void {}
-
-    public function getInterface(string $playerName): ?CombatInterface {
-        return $this->interfaces[$playerName] ?? null;
+    public function addCps(): void {
+        array_unshift($this->cps, microtime(true));
+        if(count($this->cps) > 100){
+            array_pop($this->cps);
+        }
     }
 
-    public function exist(string $playerName): bool {
-        return array_key_exists($playerName, $this->interfaces);
+    public function getCombos(): int {
+        return $this->combos;
     }
 
-    public function register(Player $player): void {
-        $this->interfaces[$player->getName()] = new CombatInterface($player);
+    public function addCombo(): void {
+        $this->combos ++;
+    }
+
+    public function resetCombo(): void {
+        $this->combos = 0;
+    }
+
+    public function getReach(): float {
+        return $this->reach;
+    }
+
+    public function setReach(float $reach): void {
+        $this->reach = $reach;
     }
 }

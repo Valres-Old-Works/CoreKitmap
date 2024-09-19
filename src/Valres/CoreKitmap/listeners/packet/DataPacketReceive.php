@@ -21,34 +21,28 @@
 
 declare(strict_types=1);
 
-namespace Valres\CoreKitmap\listeners\entity;
+namespace Valres\CoreKitmap\listeners\packet;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
-use Valres\CoreKitmap\Core;
+use pocketmine\event\server\DataPacketReceiveEvent as Event;
+use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
+use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 use Valres\CoreKitmap\player\CustomPlayer;
 
-class EntityDamage implements Listener
+class DataPacketReceive implements Listener
 {
-    public function onDamage(EntityDamageByEntityEvent $event): void {
-        $combatManager = Core::getInstance()->combatManager;
-        $victim        = $event->getEntity();
-        $damager       = $event->getDamager();
+    public function onEvent(Event $event): void {
+        $packet = $event->getPacket();
+        if(
+            ($packet::NETWORK_ID === InventoryTransactionPacket::NETWORK_ID && $packet->trData instanceof UseItemOnEntityTransactionData) ||
+            ($packet::NETWORK_ID === LevelSoundEventPacket::NETWORK_ID && $packet->sound === LevelSoundEvent::ATTACK_NODAMAGE)
+        ){
+            $player = $event->getOrigin()->getPlayer();
+            if(!$player instanceof CustomPlayer) return;
 
-        if(!$victim instanceof CustomPlayer or !$damager instanceof CustomPlayer) return;
-
-        $event->setAttackCooldown($combatManager->getAttackCooldown());
-        $event->setKnockBack($combatManager->getKnockback());
-
-        $damager->updateFight();
-        $victim->updateFight();
-
-        $damager->getCombatInterface()->addCombo();
-        $victim->getCombatInterface()->resetCombo();
-
-        $distance = $damager->getPosition()->distance($victim->getPosition());
-        $damager->getCombatInterface()->setReach(min($distance, 3.0));
-
-        $damager->sendCombatInterface();
+            $player->getCombatInterface()->addCps();
+        }
     }
 }

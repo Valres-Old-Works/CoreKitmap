@@ -32,6 +32,7 @@ use pocketmine\player\Player;
 use pocketmine\player\PlayerInfo;
 use pocketmine\Server;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\combat\CombatInterface;
 use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\grades\Grade;
 use Valres\CoreKitmap\managers\sanctions\CasierJudiciaire;
@@ -44,6 +45,7 @@ class CustomPlayer extends Player
     private CasierJudiciaire $casierJudiciaire;
 
     private Settings $settings;
+    private CombatInterface $combatInterface;
 
     private bool $inFight = false;
     private int $fightTime = 0;
@@ -58,6 +60,7 @@ class CustomPlayer extends Player
 
         $this->casierJudiciaire = $namedtag?->getTag("casier") instanceof StringTag ? unserialize($namedtag->getString("casier")) : new CasierJudiciaire();
         $this->settings         = $namedtag?->getTag("settings") instanceof StringTag ? unserialize(($namedtag->getString("settings"))) : new Settings();
+        $this->combatInterface  = new CombatInterface();
     }
 
     public function getSaveData(): CompoundTag {
@@ -94,6 +97,27 @@ class CustomPlayer extends Player
 
     public function getSettings(): Settings {
         return $this->settings;
+    }
+
+    public function getCombatInterface(): CombatInterface {
+        return $this->combatInterface;
+    }
+
+    public function sendCombatInterface(): void {
+        $tips = [];
+        if($this->settings->isCps()){
+            $tips[] = "CPS: " . $this->combatInterface->getCps();
+        }
+        if($this->settings->isCombo()){
+            $tips[] = "Combo: " . $this->combatInterface->getCombos();
+        }
+        if($this->settings->isReach()){
+            $tips[] = "Reach: " . $this->combatInterface->getReach();
+        }
+
+        if(!empty($tips)){
+            $this->sendTip(implode(" | ", $tips));
+        }
     }
 
     public function onUpdate(int $currentTick): bool {
