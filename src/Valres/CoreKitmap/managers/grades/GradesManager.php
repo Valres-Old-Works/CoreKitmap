@@ -42,7 +42,7 @@ class GradesManager extends BaseManager
         $this->datas = $this->getPlugin()->getConfigFile("grades/grades");
 
         foreach($this->datas->getAll() as $name => $data){
-            $this->grades[$name] = new Grade($name, $data["displayName"], $data["chatFormat"], $data["nametagFormat"], $data["color"], $data["permissions"]);
+            $this->grades[$name] = new Grade($name, $data["displayName"], $data["chatFormat"], $data["nametagFormat"], $data["color"], $data["permissions"], $data["isStaff"]);
         }
     }
 
@@ -50,11 +50,12 @@ class GradesManager extends BaseManager
     public function save(): void {
         foreach($this->grades as $name => $data){
             $this->datas->set($name, [
-                "displayName" => $data->getDisplayName(),
-                "chatFormat" => $data->getChatFormat(),
+                "displayName"   => $data->getDisplayName(),
+                "chatFormat"    => $data->getChatFormat(),
                 "nametagFormat" => $data->getNametagFormat(),
-                "color" => $data->getColor(),
-                "permissions" => $data->getPermissions()
+                "color"         => $data->getColor(),
+                "permissions"   => $data->getPermissions(),
+                "isStaff"       => $data->isStaff()
             ]);
         }
         $this->datas->save();

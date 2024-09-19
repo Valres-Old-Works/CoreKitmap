@@ -31,7 +31,8 @@ class Grade
         protected string $chatFormat,
         protected string $nametagFormat,
         protected string $color,
-        protected array  $permissions
+        protected array  $permissions,
+        protected bool   $isStaff
     ){}
 
     public function getName(): string {
@@ -60,5 +61,9 @@ class Grade
 
     public function getPermissions(): array {
         return $this->permissions;
+    }
+
+    public function isStaff(): bool {
+        return $this->isStaff;
     }
 }

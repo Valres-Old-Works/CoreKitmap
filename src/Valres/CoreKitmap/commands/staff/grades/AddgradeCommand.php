@@ -54,6 +54,7 @@ class AddgradeCommand extends Command
             $chatFormat    = $data[3];
             $nametagFormat = $data[4];
             $color         = $data[5];
+            $isStaff       = $data[6];
 
             if ($id === "")            $missings[] = "Identifiant";
             if ($name === "")          $missings[] = "Nom";
@@ -66,7 +67,7 @@ class AddgradeCommand extends Command
                 return;
             }
 
-            Core::getInstance()->gradesManager->addGrade(new Grade($id, $name, $chatFormat, $nametagFormat, $color, []));
+            Core::getInstance()->gradesManager->addGrade(new Grade($id, $name, $chatFormat, $nametagFormat, $color, [], $isStaff));
         });
         $form->setTitle("Grade > Add");
         $content = "Veuillez remplir tout les champs.";
@@ -79,6 +80,7 @@ class AddgradeCommand extends Command
         $form->addInput("Format dans le chat :");
         $form->addInput("Format du nametag :");
         $form->addInput("Couleur :", "Exemple: \§4");
+        $form->addToggle("Staff ?", false);
         $player->sendForm($form);
     }
 }
