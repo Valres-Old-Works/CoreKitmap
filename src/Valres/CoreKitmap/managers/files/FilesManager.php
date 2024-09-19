@@ -29,6 +29,7 @@ class FilesManager extends BaseManager
     const GRADES    = "configs/grades-config";
     const SANCTIONS = "configs/sanctions-config";
     const MONEY     = "configs/money-config";
+    const STATS     = "configs/statistics-config";
 
     public function getName(): string {
         return "Files";
@@ -39,7 +40,8 @@ class FilesManager extends BaseManager
             "sanctions/bans", "sanctions/IPBans", "sanctions/uuidBans", "sanctions/mutes", "sanctions/blacklist", "configs/sanctions-config",
             "altAccounts/altAccounts",
             "grades/grades", "configs/grades-config", "configs/combat-config",
-            "moneys/moneys", "configs/money-config"
+            "moneys/moneys", "configs/money-config",
+            "statisctics/statistics", "configs/statistics-config"
         ];
 
         foreach($files as $file){

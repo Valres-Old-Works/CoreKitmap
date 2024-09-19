@@ -27,7 +27,7 @@ class Statistics
 {
     public function __construct(
         protected int $kills = 0,
-        protected int $death = 0
+        protected int $deaths = 0
     ){}
 
     public function getKills(): int {
@@ -35,10 +35,10 @@ class Statistics
     }
 
     public function getDeath(): int {
-        return $this->death;
+        return $this->deaths;
     }
 
     public function getKDR(): float {
-        return $this->death === 0 ? $this->kills : round($this->kills / $this->death, 2);
+        return $this->deaths === 0 ? $this->kills : round($this->kills / $this->deaths, 2);
     }
 }

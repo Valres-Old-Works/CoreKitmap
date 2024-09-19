@@ -1,0 +1,6 @@
+no-player: "§cCe joueur n'existe pas."
+
+stats-title: "Voiçi les stats de {player}:"
+stats-kill-line: "Kills: {kills}"
+stats-death-line: "Death: {death}"
+stats-kdr-line: "KDR: {kdr}"

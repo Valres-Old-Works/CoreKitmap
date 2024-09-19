@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Valres\CoreKitmap\managers\combat;
 
+use JsonException;
 use pocketmine\utils\Config;
 use Valres\CoreKitmap\managers\BaseManager;
 
@@ -39,11 +40,22 @@ class StatisticsManager extends BaseManager
     }
 
     public function load(): void {
-        // TODO: Implement load() method.
+        $this->datas = new Config($this->getPlugin()->getDataFolder() . "statistics/statistics.yml", Config::YAML);
+
+        foreach($this->datas->getAll() as $playerName => $data){
+            $this->stats[$playerName] = new Statistics($data["kills"], $data["deaths"]);
+        }
     }
 
+    /** @throws JsonException */
     public function save(): void {
-        // TODO: Implement save() method.
+        foreach($this->stats as $playerName => $data){
+            $this->datas->set($playerName, [
+                "kills"  => $data->getKills(),
+                "deaths" => $data->getDeath()
+            ]);
+        }
+        $this->datas->save();
     }
 
     public function getStats(string $playerName): ?Statistics {

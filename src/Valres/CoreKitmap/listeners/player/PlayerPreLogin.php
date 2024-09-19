@@ -77,5 +77,10 @@ class PlayerPreLogin implements Listener
         if(!$moneyManager->exist($name)){
             $moneyManager->register($name);
         }
+
+        $statsManager = Core::getInstance()->statisticsManager;
+        if(!$statsManager->exist($name)){
+            $statsManager->register($name);
+        }
     }
 }

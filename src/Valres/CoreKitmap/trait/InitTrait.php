@@ -25,6 +25,7 @@ namespace Valres\CoreKitmap\trait;
 
 use Valres\CoreKitmap\managers\alt\AltAccountManager;
 use Valres\CoreKitmap\managers\combat\CombatManager;
+use Valres\CoreKitmap\managers\combat\StatisticsManager;
 use Valres\CoreKitmap\managers\commands\CommandsManager;
 use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\grades\Grade;
@@ -37,21 +38,23 @@ trait InitTrait
 {
     public AltAccountManager $accountManager;
     public CombatManager     $combatManager;
-    public CommandsManager  $commandsManager;
-    public FilesManager     $filesManager;
-    public GradesManager    $gradesManager;
-    public ListenersManager $listenersManager;
-    public MoneyManager     $moneyManager;
-    public SanctionsManager $sanctionsManager;
+    public CommandsManager   $commandsManager;
+    public FilesManager      $filesManager;
+    public GradesManager     $gradesManager;
+    public ListenersManager  $listenersManager;
+    public MoneyManager      $moneyManager;
+    public SanctionsManager  $sanctionsManager;
+    public StatisticsManager $statisticsManager;
 
     public function initAll(): void {
-        $this->filesManager     = new FilesManager();
-        $this->accountManager   = new AltAccountManager();
-        $this->combatManager    = new CombatManager();
-        $this->commandsManager  = new CommandsManager();
-        $this->gradesManager    = new GradesManager();
-        $this->listenersManager = new ListenersManager();
-        $this->moneyManager     = new MoneyManager();
-        $this->sanctionsManager = new SanctionsManager();
+        $this->filesManager      = new FilesManager();
+        $this->accountManager    = new AltAccountManager();
+        $this->combatManager     = new CombatManager();
+        $this->commandsManager   = new CommandsManager();
+        $this->gradesManager     = new GradesManager();
+        $this->listenersManager  = new ListenersManager();
+        $this->moneyManager      = new MoneyManager();
+        $this->sanctionsManager  = new SanctionsManager();
+        $this->statisticsManager = new StatisticsManager();
     }
 }
