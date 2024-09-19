@@ -43,6 +43,8 @@ class CustomPlayer extends Player
 
     private CasierJudiciaire $casierJudiciaire;
 
+    private Settings $settings;
+
     private bool $inFight = false;
     private int $fightTime = 0;
 
@@ -55,8 +57,7 @@ class CustomPlayer extends Player
         $this->calculPermissions();
 
         $this->casierJudiciaire = $namedtag?->getTag("casier") instanceof StringTag ? unserialize($namedtag->getString("casier")) : new CasierJudiciaire();
-
-
+        $this->settings         = $namedtag?->getTag("settings") instanceof StringTag ? unserialize(($namedtag->getString("settings"))) : new Settings();
     }
 
     public function getSaveData(): CompoundTag {
@@ -89,6 +90,10 @@ class CustomPlayer extends Player
 
     public function getCasierJudiciaire(): CasierJudiciaire {
         return $this->casierJudiciaire;
+    }
+
+    public function getSettings(): Settings {
+        return $this->settings;
     }
 
     public function onUpdate(int $currentTick): bool {
