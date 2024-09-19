@@ -25,10 +25,9 @@ namespace Valres\CoreKitmap\trait;
 
 use Valres\CoreKitmap\managers\alt\AltAccountManager;
 use Valres\CoreKitmap\managers\combat\CombatManager;
-use Valres\CoreKitmap\managers\combat\StatisticsManager;
+use Valres\CoreKitmap\managers\combat\statisctics\StatisticsManager;
 use Valres\CoreKitmap\managers\commands\CommandsManager;
 use Valres\CoreKitmap\managers\files\FilesManager;
-use Valres\CoreKitmap\managers\grades\Grade;
 use Valres\CoreKitmap\managers\grades\GradesManager;
 use Valres\CoreKitmap\managers\listeners\ListenersManager;
 use Valres\CoreKitmap\managers\money\MoneyManager;

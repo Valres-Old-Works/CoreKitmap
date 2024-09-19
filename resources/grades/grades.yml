@@ -6,3 +6,4 @@ joueur:
   permissions:
     - kit.joueur
     - timereward.joueur
+  isStaff: false

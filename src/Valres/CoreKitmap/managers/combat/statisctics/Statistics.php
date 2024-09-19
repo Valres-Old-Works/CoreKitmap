@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Valres\CoreKitmap\managers\combat;
+namespace Valres\CoreKitmap\managers\combat\statisctics;
 
 class Statistics
 {

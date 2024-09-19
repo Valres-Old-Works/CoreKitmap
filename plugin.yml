@@ -6,6 +6,8 @@ main: Valres\CoreKitmap\Core
 
 permissions:
   #Combat    :
+  stats.command:
+    default: op
   change-kb.command:
     default: op
   #Grades    :
@@ -22,6 +24,12 @@ permissions:
     default: true
   topmoney.command:
     default: true
+  add-money.command:
+    default: op
+  reduce-money.command:
+    default: op
+  set-money.command:
+    default: op
   #Sanctions :
   alias.command:
     default: op

@@ -41,7 +41,7 @@ class FilesManager extends BaseManager
             "altAccounts/altAccounts",
             "grades/grades", "configs/grades-config", "configs/combat-config",
             "moneys/moneys", "configs/money-config",
-            "statisctics/statistics", "configs/statistics-config"
+            "statistics/statistics", "configs/statistics-config"
         ];
 
         foreach($files as $file){
