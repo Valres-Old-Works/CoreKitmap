@@ -64,7 +64,7 @@ class SpawnBoxCommand extends Command
             Utils::PNGtoBYTES(Core::getInstance()->getDataFolder() . "box/textures/" . $box->getTextureName() . ".png"),
             "",
             $box->getGeometryName(),
-            file_get_contents(Core::getInstance()->getDataFolder() . "box/geometries/" . $box->getGeometryPath() . ".json")
+            file_get_contents(Core::getInstance()->getDataFolder() . "box/geometries/" . $box->getGeometryPath() . ".geo.json")
         ));
         $boxEntity->setBox($box);
         $boxEntity->spawnToAll();

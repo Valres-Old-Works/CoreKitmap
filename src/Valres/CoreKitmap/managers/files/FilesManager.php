@@ -46,8 +46,16 @@ class FilesManager extends BaseManager
             "box/box", "configs/box-config"
         ];
 
+        $dirs = [
+            "box/textures/", "box/geometries/",
+        ];
+
         foreach($files as $file){
             $this->getPlugin()->saveResource($file . ".yml");
+        }
+
+        foreach($dirs as $dir){
+            @mkdir($this->getPlugin()->getDataFolder() . $dir);
         }
     }
 

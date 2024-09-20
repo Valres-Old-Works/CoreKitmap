@@ -56,7 +56,6 @@ class BoxEntity extends Human
     }
 
     public function attack(EntityDamageEvent $source): void {
-        parent::attack($source);
         $source->cancel();
 
         $config = Core::getInstance()->getConfigFile(FilesManager::BOX);

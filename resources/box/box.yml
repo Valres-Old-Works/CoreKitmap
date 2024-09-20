@@ -14,5 +14,5 @@ commun:
       chance: 50
   texturePath: "commun"
   geometryPath: "commun"
-  geometryName: "commun.geometry"
+  geometryName: "geometry.commun"
   key: "blaze_rod"
