@@ -32,11 +32,11 @@ use Valres\CoreKitmap\entity\BoxEntity;
 use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\utils\Utils;
 
-class SpawnBoxCommand extends Command
+class EditBoxCommand extends Command
 {
     public function __construct() {
-        parent::__construct("spawn-box", "Spawn une box", "usage : /spawn-box <box-name>");
-        $this->setPermission("spawn-box.command");
+        parent::__construct("edit-box", "Éditer une box", "usage : /edit-box <box-name>");
+        $this->setPermission("edit-box.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
@@ -57,14 +57,6 @@ class SpawnBoxCommand extends Command
         }
         $box = $boxManager->getBox($boxName);
 
-        $boxEntity = new BoxEntity($sender->getLocation(), new Skin(
-            "box",
-            Utils::PNGtoBYTES(Core::getInstance()->getDataFolder() . "box/textures/" . $box->getTextureName() . ".png"),
-            "",
-            $box->getGeometryName(),
-            file_get_contents(Core::getInstance()->getDataFolder() . "box/geometries/" . $box->getGeometryPath() . ".geo.json")
-        ));
-        $boxEntity->setBox($box);
-        $boxEntity->spawnToAll();
+        //TODO: Edit box with form ui.
     }
 }

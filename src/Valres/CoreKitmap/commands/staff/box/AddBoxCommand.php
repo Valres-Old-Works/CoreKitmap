@@ -25,46 +25,21 @@ namespace Valres\CoreKitmap\commands\staff\box;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\entity\Skin;
 use pocketmine\player\Player;
 use Valres\CoreKitmap\Core;
-use Valres\CoreKitmap\entity\BoxEntity;
 use Valres\CoreKitmap\managers\files\FilesManager;
-use Valres\CoreKitmap\utils\Utils;
 
-class SpawnBoxCommand extends Command
+class AddBoxCommand extends Command
 {
     public function __construct() {
-        parent::__construct("spawn-box", "Spawn une box", "usage : /spawn-box <box-name>");
-        $this->setPermission("spawn-box.command");
+        parent::__construct("add-box", "Créer une box", "usage : /add-box");
+        $this->setPermission("add-box.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile(FilesManager::BOX);
         if(!$sender instanceof Player) return;
 
-        if(count($args) < 1){
-            $sender->sendMessage($this->getUsage());
-            return;
-        }
-
-        $boxName = $args[0];
-        $boxManager = Core::getInstance()->boxManager;
-
-        if(!$boxManager->exist($boxName)){
-            $sender->sendMessage($config->get("no-box"));
-            return;
-        }
-        $box = $boxManager->getBox($boxName);
-
-        $boxEntity = new BoxEntity($sender->getLocation(), new Skin(
-            "box",
-            Utils::PNGtoBYTES(Core::getInstance()->getDataFolder() . "box/textures/" . $box->getTextureName() . ".png"),
-            "",
-            $box->getGeometryName(),
-            file_get_contents(Core::getInstance()->getDataFolder() . "box/geometries/" . $box->getGeometryPath() . ".geo.json")
-        ));
-        $boxEntity->setBox($box);
-        $boxEntity->spawnToAll();
+        //TODO: Add/Create box with form ui.
     }
 }
