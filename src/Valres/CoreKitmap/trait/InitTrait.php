@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Valres\CoreKitmap\trait;
 
 use Valres\CoreKitmap\managers\alt\AltAccountManager;
+use Valres\CoreKitmap\managers\box\BoxManager;
 use Valres\CoreKitmap\managers\combat\CombatManager;
 use Valres\CoreKitmap\managers\combat\statisctics\StatisticsManager;
 use Valres\CoreKitmap\managers\commands\CommandsManager;
@@ -37,6 +38,7 @@ trait InitTrait
 {
     public AltAccountManager $accountManager;
     public CombatManager     $combatManager;
+    public BoxManager        $boxManager;
     public CommandsManager   $commandsManager;
     public FilesManager      $filesManager;
     public GradesManager     $gradesManager;
@@ -48,6 +50,7 @@ trait InitTrait
     public function initAll(): void {
         $this->filesManager      = new FilesManager();
         $this->accountManager    = new AltAccountManager();
+        $this->boxManager        = new BoxManager();
         $this->combatManager     = new CombatManager();
         $this->commandsManager   = new CommandsManager();
         $this->gradesManager     = new GradesManager();

@@ -26,6 +26,7 @@ use Valres\CoreKitmap\managers\BaseManager;
 class FilesManager extends BaseManager
 {
     const COMBAT    = "configs/combat-config";
+    const BOX       = "configs/box-config";
     const GRADES    = "configs/grades-config";
     const SANCTIONS = "configs/sanctions-config";
     const MONEY     = "configs/money-config";
@@ -41,7 +42,8 @@ class FilesManager extends BaseManager
             "altAccounts/altAccounts",
             "grades/grades", "configs/grades-config", "configs/combat-config",
             "moneys/moneys", "configs/money-config",
-            "statistics/statistics", "configs/statistics-config"
+            "statistics/statistics", "configs/statistics-config",
+            "box/box", "configs/box-config"
         ];
 
         foreach($files as $file){

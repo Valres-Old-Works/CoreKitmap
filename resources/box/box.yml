@@ -1,0 +1,17 @@
+commun:
+  displayName: "Commun"
+  items:
+    stick:
+      count: 1
+      customName: "Stick de ouf"
+      enchants:
+        - "knockback:5"
+        - "unbreaking:10"
+      chance: 50
+    diamond:
+      count: 10
+      customName: "Diamantttt"
+      chance: 50
+  texture: "commun"
+  geometry: "commun.geometry"
+  key: "blaze_rod"

@@ -23,7 +23,13 @@ declare(strict_types=1);
 
 namespace Valres\CoreKitmap\utils;
 
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\StringToEnchantmentParser;
+use pocketmine\item\enchantment\VanillaEnchantments;
+use pocketmine\item\Item;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\box\BoxItem;
 
 class Utils
 {
@@ -48,5 +54,62 @@ class Utils
                 $callable($namespace);
             }
         }
+    }
+
+    public static function makeItem(Item $item, array $data): Item {
+        if(isset($data["customName"])){
+            $item->setCustomName($data["customName"]);
+        }
+
+        if(isset($data["enchants"])){
+            foreach($data["enchants"] as $enchant){
+                $enchant = explode(":", $enchant);
+                $item->addEnchantment(new EnchantmentInstance(StringToEnchantmentParser::getInstance()->parse($enchant[0]), intval($enchant[1])));
+            }
+        }
+
+        return $item;
+    }
+
+    public static function getEnchantName(Enchantment $enchantment): string {
+        $enchants = [
+            VanillaEnchantments::PROTECTION()->getName()->getText() => "protection",
+            VanillaEnchantments::FIRE_PROTECTION()->getName()->getText() => "fire_protection",
+            VanillaEnchantments::FEATHER_FALLING()->getName()->getText() => "feather_falling",
+            VanillaEnchantments::BLAST_PROTECTION()->getName()->getText() => "blast_protection",
+            VanillaEnchantments::PROJECTILE_PROTECTION()->getName()->getText() => "projectile_protection",
+            VanillaEnchantments::RESPIRATION()->getName()->getText() => "respiration",
+            VanillaEnchantments::THORNS()->getName()->getText() => "thorns",
+            VanillaEnchantments::SHARPNESS()->getName()->getText() => "sharpness",
+            VanillaEnchantments::KNOCKBACK()->getName()->getText() => "knockback",
+            VanillaEnchantments::FIRE_ASPECT()->getName()->getText() => "fire_aspect",
+            VanillaEnchantments::EFFICIENCY()->getName()->getText() => "efficiency",
+            VanillaEnchantments::SILK_TOUCH()->getName()->getText() => "silk_touch",
+            VanillaEnchantments::UNBREAKING()->getName()->getText() => "unbreaking",
+            VanillaEnchantments::FORTUNE()->getName()->getText() => "fortune",
+            VanillaEnchantments::POWER()->getName()->getText() => "power",
+            VanillaEnchantments::PUNCH()->getName()->getText() => "punch",
+            VanillaEnchantments::FLAME()->getName()->getText() => "flame",
+            VanillaEnchantments::INFINITY()->getName()->getText() => "infinity",
+            VanillaEnchantments::MENDING()->getName()->getText() => "mending"
+        ];
+
+        return $enchants[$enchantment->getName()->getText()] ?? "unknown_enchantment";
+    }
+
+
+    public static function unmakeItem(BoxItem $boxItem): array {
+        $item = $boxItem->getItem();
+        $array = [];
+        $array["count"] = $item->getCount();
+        $array["customName"] = $item->getName();
+        if(count($item->getEnchantments()) > 0){
+            foreach($item->getEnchantments() as $enchantment){
+                $array["enchants"][] = self::getEnchantName($enchantment->getType()) . ":" . $enchantment->getLevel();
+            }
+        }
+        $array["chance"] = $boxItem->getChance();
+
+        return $array;
     }
 }
