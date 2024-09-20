@@ -32,7 +32,8 @@ class Box
         protected string $displayName,
         protected array  $boxItems,
         protected string $textureName,
-        protected string $geometry,
+        protected string $geometryPath,
+        protected string $geometryName,
         protected Item $key
     ){}
 
@@ -57,8 +58,12 @@ class Box
         return $this->textureName;
     }
 
-    public function getGeometry(): string {
-        return $this->geometry;
+    public function getGeometryPath(): string {
+        return $this->geometryPath;
+    }
+
+    public function getGeometryName(): string {
+        return $this->geometryName;
     }
 
     public function getKey(): Item {

@@ -12,6 +12,7 @@ commun:
       count: 10
       customName: "Diamantttt"
       chance: 50
-  texture: "commun"
-  geometry: "commun.geometry"
+  texturePath: "commun"
+  geometryPath: "commun"
+  geometryName: "commun.geometry"
   key: "blaze_rod"

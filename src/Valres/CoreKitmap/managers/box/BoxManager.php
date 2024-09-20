@@ -54,8 +54,9 @@ class BoxManager extends BaseManager
                 $name,
                 $data["displayName"],
                 $boxItem,
-                $data["texture"],
-                $data["geometry"],
+                $data["texturePath"],
+                $data["geometryPath"],
+                $data["geometryName"],
                 StringToItemParser::getInstance()->parse($data["key"])
             );
         }
@@ -80,8 +81,9 @@ class BoxManager extends BaseManager
             $this->datas->set($name, [
                 "displayName" => $box->getDisplayName(),
                 "items" => $itemsArray,
-                "texture" => $box->getTextureName(),
-                "geometry" => $box->getGeometry(),
+                "texturePath" => $box->getTextureName(),
+                "geometryPath" => $box->getGeometryPath(),
+                "geometryName" => $box->getGeometryName(),
                 "key" => StringToItemParser::getInstance()->lookupAliases($box->getKey())[0],
             ]);
         }
