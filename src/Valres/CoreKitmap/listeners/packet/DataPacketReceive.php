@@ -43,6 +43,7 @@ class DataPacketReceive implements Listener
             if(!$player instanceof CustomPlayer) return;
 
             $player->getCombatInterface()->addCps();
+            $player->sendCombatInterface();
         }
     }
 }

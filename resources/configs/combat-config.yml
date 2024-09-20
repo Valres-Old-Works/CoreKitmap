@@ -5,3 +5,8 @@ no-commands-message: "§cVous ne pouvez pas faire de commandes en combat."
 
 knockback: 0.37
 attack-cooldown: 8
+
+cps-format: "§aCPS§f: {cps}"
+combo-format: "§aCombo§f: {combo}"
+reach-format: "§aReach§f: {reach}"
+separator: " | "

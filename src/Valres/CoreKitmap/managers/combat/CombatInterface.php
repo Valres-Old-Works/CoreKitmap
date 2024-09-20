@@ -23,13 +23,28 @@ declare(strict_types=1);
 
 namespace Valres\CoreKitmap\managers\combat;
 
+use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\managers\files\FilesManager;
+
 class CombatInterface
 {
+    private string $cpsFormat;
+    private string $comboFormat;
+    private string $reachFormat;
+    private string $separator;
+
     public function __construct(
         protected array $cps    = [],
         protected int   $combos = 0,
         protected float $reach  = 0.0
-    ) {}
+    ) {
+        $config = Core::getInstance()->getConfigFile(FilesManager::COMBAT);
+
+        $this->cpsFormat   = $config->get("cps-format");
+        $this->comboFormat = $config->get("combo-format");
+        $this->reachFormat = $config->get("reach-format");
+        $this->separator   = $config->get("separator");
+    }
 
     public function getCps(): int {
         return count(array_filter($this->cps, function($timestamp): bool {
@@ -62,5 +77,21 @@ class CombatInterface
 
     public function setReach(float $reach): void {
         $this->reach = $reach;
+    }
+
+    public function getCpsFormat(): string {
+        return $this->cpsFormat;
+    }
+
+    public function getComboFormat(): string {
+        return $this->comboFormat;
+    }
+
+    public function getReachFormat(): string {
+        return $this->reachFormat;
+    }
+
+    public function getSeparator(): string {
+        return $this->separator;
     }
 }

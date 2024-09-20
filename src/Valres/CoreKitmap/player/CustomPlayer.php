@@ -106,17 +106,17 @@ class CustomPlayer extends Player
     public function sendCombatInterface(): void {
         $tips = [];
         if($this->settings->isCps()){
-            $tips[] = "CPS: " . $this->combatInterface->getCps();
+            $tips[] = str_replace("{cps}", $this->combatInterface->getCps(), $this->combatInterface->getCpsFormat());
         }
         if($this->settings->isCombo()){
-            $tips[] = "Combo: " . $this->combatInterface->getCombos();
+            $tips[] = str_replace("{combo}", $this->combatInterface->getCombos(), $this->combatInterface->getComboFormat());
         }
         if($this->settings->isReach()){
-            $tips[] = "Reach: " . $this->combatInterface->getReach();
+            $tips[] = str_replace("{reach}", $this->combatInterface->getReach(), $this->combatInterface->getReachFormat());
         }
 
         if(!empty($tips)){
-            $this->sendTip(implode(" | ", $tips));
+            $this->sendTip(implode($this->combatInterface->getSeparator(), $tips));
         }
     }
 

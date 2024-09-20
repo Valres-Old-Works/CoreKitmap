@@ -39,7 +39,7 @@ class CasierJudiciaire
         return $this->bans;
     }
 
-    public function addBan(Ban|UuidBan|IPBan $ban): void {
+    public function addBan(UuidBan|Ban|IPBan $ban): void {
         $this->bans[] = $ban;
     }
 
