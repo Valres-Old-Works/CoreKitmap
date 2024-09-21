@@ -46,8 +46,8 @@ class UnmuteCommand extends Command
         $playerName = $args[0];
 
         $sanctionManager = Core::getInstance()->sanctionsManager;
-        if(!$sanctionManager->isBanned($playerName)){
-            $sender->sendMessage($config->get("not-ban-message"));
+        if(!$sanctionManager->isMuted($playerName)){
+            $sender->sendMessage($config->get("not-mute-message"));
             return;
         }
 
@@ -55,7 +55,7 @@ class UnmuteCommand extends Command
         Server::getInstance()->broadcastMessage(str_replace(
             ["{player}", "{author}"],
             [$playerName, $sender->getName()],
-            $config->get("unban-message")
+            $config->get("unmute-message")
         ));
     }
 }

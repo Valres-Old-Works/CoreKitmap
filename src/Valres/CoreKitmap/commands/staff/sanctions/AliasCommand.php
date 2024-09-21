@@ -38,7 +38,7 @@ class AliasCommand extends Command
     public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         $config = Core::getInstance()->getConfigFile(FilesManager::SANCTIONS);
 
-        if (count($args) < 1) {
+        if(count($args) < 1){
             $sender->sendMessage($this->getUsage());
             return;
         }
@@ -46,7 +46,7 @@ class AliasCommand extends Command
         $target = $args[0];
         $altManager = Core::getInstance()->accountManager;
 
-        if (!$altManager->exist($target)) {
+        if(!$altManager->exist($target)){
             $sender->sendMessage($config->get("no-players"));
             return;
         }
