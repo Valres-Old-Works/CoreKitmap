@@ -8,6 +8,10 @@ permissions:
   #Box       :
   spawn-box.command:
     default: op
+  add-box.command:
+    default: op
+  edit-box.command:
+    default: op
   settings.command:
     default: true
   #Combat    :

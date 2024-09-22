@@ -89,4 +89,8 @@ class BoxManager extends BaseManager
         }
         $this->datas->save();
     }
+
+    public function addBox(Box $box): void {
+        $this->box[$box->getName()] = $box;
+    }
 }

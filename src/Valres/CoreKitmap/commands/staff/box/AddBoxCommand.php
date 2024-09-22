@@ -27,6 +27,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use Valres\CoreKitmap\Core;
+use Valres\CoreKitmap\libs\jojoe77777\FormAPI\CustomForm;
 use Valres\CoreKitmap\managers\files\FilesManager;
 
 class AddBoxCommand extends Command
@@ -40,6 +41,17 @@ class AddBoxCommand extends Command
         $config = Core::getInstance()->getConfigFile(FilesManager::BOX);
         if(!$sender instanceof Player) return;
 
-        //TODO: Add/Create box with form ui.
+        $form = new CustomForm(function(Player $player, array $data = null): void {
+            if(is_null($data)) return;
+
+
+        });
+        $form->setTitle("Add box");
+        $form->addInput("Identifier");
+        $form->addInput("Nom");
+        $form->addInput("Chemin de la texture");
+        $form->addInput("Chemin de la geometry");
+        $form->addInput("Nom de la geometry");
+        $sender->sendForm($form);
     }
 }
