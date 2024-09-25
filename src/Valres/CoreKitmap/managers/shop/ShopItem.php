@@ -21,40 +21,27 @@
 
 declare(strict_types=1);
 
-namespace Valres\CoreKitmap;
+namespace Valres\CoreKitmap\managers\shop;
 
-use pocketmine\plugin\PluginBase;
-use pocketmine\utils\Config;
-use pocketmine\utils\SingletonTrait;
-use Valres\CoreKitmap\libs\invmenu\InvMenuHandler;
-use Valres\CoreKitmap\managers\ManagerHandler;
-use Valres\CoreKitmap\trait\InitTrait;
+use pocketmine\item\Item;
 
-class Core extends PluginBase
+class ShopItem
 {
-    use SingletonTrait, InitTrait;
+    public function __construct(
+        protected Item  $item,
+        protected float $buyPrice,
+        protected ?float $sellPrice
+    ) {}
 
-    public string $file;
-
-    protected function onEnable(): void {
-        $this->file = $this->getFile();
-
-        if(!InvMenuHandler::isRegistered()){
-            InvMenuHandler::register($this);
-        }
-
-        $this->initAll();
+    public function getItem(): Item {
+        return $this->item;
     }
 
-    protected function onLoad(): void {
-        self::setInstance($this);
+    public function getBuyPrice(): float {
+        return $this->buyPrice;
     }
 
-    protected function onDisable(): void {
-        ManagerHandler::getInstance()->onDisable();
-    }
-
-    public function getConfigFile(string $file): Config {
-        return new Config($this->getDataFolder() . $file . ".yml", Config::YAML);
+    public function getSellPrice(): ?float {
+        return $this->sellPrice;
     }
 }

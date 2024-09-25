@@ -82,5 +82,10 @@ class PlayerPreLogin implements Listener
         if(!$statsManager->exist($name)){
             $statsManager->register($name);
         }
+
+        $creditManager = Core::getInstance()->creditManager;
+        if(!$creditManager->exist($name)){
+            $creditManager->register($name);
+        }
     }
 }

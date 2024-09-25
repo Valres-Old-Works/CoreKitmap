@@ -28,18 +28,22 @@ use Valres\CoreKitmap\managers\box\BoxManager;
 use Valres\CoreKitmap\managers\combat\CombatManager;
 use Valres\CoreKitmap\managers\combat\statisctics\StatisticsManager;
 use Valres\CoreKitmap\managers\commands\CommandsManager;
+use Valres\CoreKitmap\managers\credit\CreditManager;
 use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\grades\GradesManager;
 use Valres\CoreKitmap\managers\listeners\ListenersManager;
 use Valres\CoreKitmap\managers\money\MoneyManager;
 use Valres\CoreKitmap\managers\sanctions\SanctionsManager;
+use Valres\CoreKitmap\managers\shop\ShopManager;
 
 trait InitTrait
 {
     public AltAccountManager $accountManager;
     public CombatManager     $combatManager;
+    public CreditManager     $creditManager;
     public BoxManager        $boxManager;
     public CommandsManager   $commandsManager;
+    public ShopManager       $shopManager;
     public FilesManager      $filesManager;
     public GradesManager     $gradesManager;
     public ListenersManager  $listenersManager;
@@ -51,7 +55,9 @@ trait InitTrait
         $this->filesManager      = new FilesManager();
         $this->accountManager    = new AltAccountManager();
         $this->boxManager        = new BoxManager();
+        $this->creditManager     = new CreditManager();
         $this->combatManager     = new CombatManager();
+        $this->shopManager       = new ShopManager();
         $this->commandsManager   = new CommandsManager();
         $this->gradesManager     = new GradesManager();
         $this->listenersManager  = new ListenersManager();
