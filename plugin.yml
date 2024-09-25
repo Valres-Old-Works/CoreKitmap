@@ -5,6 +5,12 @@ version: 0.0.1
 main: Valres\CoreKitmap\Core
 
 permissions:
+  #Credit    :
+  mycredit.command:
+    default: true
+  #Shop      :
+  addcat-shop.command:
+    default: op
   #Box       :
   spawn-box.command:
     default: op
