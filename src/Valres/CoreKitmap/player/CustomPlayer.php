@@ -24,6 +24,7 @@ namespace Valres\CoreKitmap\player;
 use pocketmine\entity\Location;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\item\VanillaItems;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\NetworkSession;
@@ -67,8 +68,10 @@ class CustomPlayer extends Player
         $nbt = parent::getSaveData();
 
         $nbt->setString("grade", $this->grade->getName());
+        $nbt->setString("settings", serialize($this->settings));
         $nbt->setString("casier", serialize($this->casierJudiciaire));
 
+        VanillaItems::STRING()->jsonSerialize()
         return $nbt;
     }
 
