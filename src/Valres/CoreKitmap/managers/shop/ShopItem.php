@@ -24,17 +24,22 @@ declare(strict_types=1);
 namespace Valres\CoreKitmap\managers\shop;
 
 use pocketmine\item\Item;
+use pocketmine\item\StringToItemParser;
 
 class ShopItem
 {
     public function __construct(
-        protected Item  $item,
+        protected string $item,
         protected ?float $buyPrice,
         protected ?float $sellPrice
     ) {}
 
-    public function getItem(): Item {
+    public function getItemParse(): string {
         return $this->item;
+    }
+
+    public function getItem(): Item {
+        return StringToItemParser::getInstance()->parse($this->getItemParse());
     }
 
     public function getBuyPrice(): ?float {

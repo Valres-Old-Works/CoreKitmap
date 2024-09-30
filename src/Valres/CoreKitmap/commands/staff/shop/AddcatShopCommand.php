@@ -46,9 +46,8 @@ class AddcatShopCommand extends Command
             if(is_null($data)) return;
 
             $name = $data[0];
-            $item = StringToItemParser::getInstance()->parse($data[1]) ?? VanillaBlocks::DIRT()->asItem();
 
-            Core::getInstance()->shopManager->addCategory($name, $item);
+            Core::getInstance()->shopManager->addCategory($name, $data[1] ?? "dirt");
         });
         $form->setTitle("Catégorie");
         $form->addInput("Nom :");

@@ -48,15 +48,14 @@ class AdditemShopCommand extends Command
             $shopManager = Core::getInstance()->shopManager;
 
             $category = $shopManager->getNameCategory($data[0]);
-            $item = (StringToItemParser::getInstance()->parse($data[2]) ?? VanillaBlocks::DIRT()->asItem())->setCustomName($data[1]);
-            $buyPrice = ($data[3] !== "" ? floatval($data[3]) : null);
-            $sellPrice = ($data[4] !== "" ? floatval($data[4]) : null);
+            $item = $data[1];
+            $buyPrice = ($data[2] !== "" ? floatval($data[2]) : null);
+            $sellPrice = ($data[3] !== "" ? floatval($data[3]) : null);
 
             $shopManager->addShopItem($category, new ShopItem($item, $buyPrice, $sellPrice));
         });
         $form->setTitle("Catégorie");
         $form->addDropdown("Catégorie :", Core::getInstance()->shopManager->getCategories());
-        $form->addInput("Nom :");
         $form->addInput("Item :");
         $form->addInput("Prix d'achat :");
         $form->addInput("Prix de vente :");

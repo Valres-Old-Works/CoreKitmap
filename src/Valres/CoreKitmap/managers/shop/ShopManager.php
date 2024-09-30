@@ -32,11 +32,9 @@ use pocketmine\player\Player;
 use pocketmine\utils\Config;
 use Valres\CoreKitmap\libs\invmenu\InvMenu;
 use Valres\CoreKitmap\libs\invmenu\transaction\DeterministicInvMenuTransaction;
-use Valres\CoreKitmap\libs\invmenu\transaction\InvMenuTransactionResult;
 use Valres\CoreKitmap\libs\invmenu\type\InvMenuTypeIds;
 use Valres\CoreKitmap\libs\jojoe77777\FormAPI\CustomForm;
 use Valres\CoreKitmap\managers\BaseManager;
-use Valres\CoreKitmap\utils\Serializer;
 
 class ShopManager extends BaseManager
 {
@@ -55,13 +53,13 @@ class ShopManager extends BaseManager
             $itemList = [];
             foreach($items as $item){
                 $itemList[] = new ShopItem(
-                    Serializer::unserializeItem($item["item"]),
+                    $item["item"],
                     $item["buyPrice"],
                     $item["sellPrice"]
                 );
             }
             $this->shop[$catName] = [
-                "itemDisplay" => StringToItemParser::getInstance()->parse($itemDisplay),
+                "itemDisplay" => $itemDisplay,
                 "items" => $itemList
             ];
         }
@@ -73,13 +71,13 @@ class ShopManager extends BaseManager
             $itemList = [];
             foreach($items as $item){
                 $itemList[] = [
-                    "item" => Serializer::serilizeItem($item->getItem()),
+                    "item" => $item->getItemParse(),
                     "buyPrice" => $item->getBuyPrice(),
                     "sellPrice" => $item->getSellPrice()
                 ];
             }
             $this->datas->set($catName, [
-                "itemDisplay" => StringToItemParser::getInstance()->lookupAliases($itemDisplay)[0],
+                "itemDisplay" => $itemDisplay,
                 "items" => $itemList
             ]);
         }
@@ -91,7 +89,7 @@ class ShopManager extends BaseManager
     }
 
     public function getCategory(string $name): ?array {
-        return $this->shop[str_replace("§r", "", $name)] ?? null;
+        return $this->shop[$name] ?? null;
     }
 
     public function getNameCategory(int|string $index): ?string {
@@ -104,8 +102,7 @@ class ShopManager extends BaseManager
         return null;
     }
 
-
-    public function addCategory(string $catName, Item $itemDisplay): void {
+    public function addCategory(string $catName, string $itemDisplay): void {
         $this->shop[$catName] = [
             "itemDisplay" => $itemDisplay,
             "items" => []
@@ -117,6 +114,10 @@ class ShopManager extends BaseManager
     }
 
     public function getShopItem(string $catName, int $index): ?ShopItem {
+        var_dump($this->shop);
+        if(!isset($this->shop[$catName])){
+            return null;
+        }
         return $this->shop[$catName]["items"][$index] ?? null;
     }
 
@@ -136,7 +137,7 @@ class ShopManager extends BaseManager
         }
         $start = 11;
         foreach($this->shop as $catName => ["itemDisplay" => $itemDisplay, "items" => $items]){
-            $menu->getInventory()->setItem($start, $itemDisplay->setCustomName("§r" . $catName));
+            $menu->getInventory()->setItem($start, StringToItemParser::getInstance()->parse($itemDisplay)->setCustomName("§r" . $catName));
             $start++;
             if(in_array($start, [16, 25, 34, 43])){
                 $start += 4;
@@ -144,7 +145,7 @@ class ShopManager extends BaseManager
         }
         $menu->setListener(InvMenu::readonly(function(DeterministicInvMenuTransaction $transaction) use ($menu): void {
             $slot = $transaction->getAction()->getSlot();
-            $catName = $transaction->getAction()->getSourceItem()->getName();
+            $catName = str_replace("§r", "", $transaction->getAction()->getSourceItem()->getName());
             if(!in_array($slot, [11, 12, 13, 14, 15] + [20, 21, 22, 23, 24] + [29, 30, 31, 32, 33] + [38, 39, 40, 41, 42])) return;
             $category = $this->getCategory($catName);
             if(is_null($category)) return;
