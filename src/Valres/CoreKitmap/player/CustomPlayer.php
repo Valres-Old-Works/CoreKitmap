@@ -71,7 +71,6 @@ class CustomPlayer extends Player
         $nbt->setString("settings", serialize($this->settings));
         $nbt->setString("casier", serialize($this->casierJudiciaire));
 
-        VanillaItems::STRING()->jsonSerialize()
         return $nbt;
     }
 

@@ -29,7 +29,7 @@ class ShopItem
 {
     public function __construct(
         protected Item  $item,
-        protected float $buyPrice,
+        protected ?float $buyPrice,
         protected ?float $sellPrice
     ) {}
 
@@ -37,7 +37,7 @@ class ShopItem
         return $this->item;
     }
 
-    public function getBuyPrice(): float {
+    public function getBuyPrice(): ?float {
         return $this->buyPrice;
     }
 
