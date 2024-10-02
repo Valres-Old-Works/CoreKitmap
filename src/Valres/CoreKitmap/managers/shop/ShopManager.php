@@ -26,7 +26,6 @@ namespace Valres\CoreKitmap\managers\shop;
 use JsonException;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\item\Item;
 use pocketmine\item\StringToItemParser;
 use pocketmine\player\Player;
 use pocketmine\utils\Config;
@@ -38,6 +37,12 @@ use Valres\CoreKitmap\managers\BaseManager;
 
 class ShopManager extends BaseManager
 {
+    private array $catSlot = [
+        11, 12, 13, 14, 15,
+        20, 21, 22, 23, 24,
+        29, 30, 31, 32, 33,
+        38, 39, 40, 41, 42
+    ];
     private array $shop = [];
 
     private Config $datas;
@@ -113,11 +118,11 @@ class ShopManager extends BaseManager
         unset($this->shop[$catName]);
     }
 
-    public function getShopItem(string $catName, int $index): ?ShopItem {
-        var_dump($this->shop);
+    public function getShopItem(string $catName, int $slot): ?ShopItem {
         if(!isset($this->shop[$catName])){
             return null;
         }
+        $index = array_search($slot, $this->catSlot);
         return $this->shop[$catName]["items"][$index] ?? null;
     }
 
@@ -131,41 +136,66 @@ class ShopManager extends BaseManager
 
     public function sendMainMenu(Player $player): void {
         $menu = InvMenu::create(InvMenuTypeIds::TYPE_DOUBLE_CHEST);
+        $this->makeMainMenu($menu);
+        $menu->send($player, "Shop");
+    }
+
+    public function makeMainMenu(InvMenu $menu): void {
         $panes = [0, 1, 7, 8, 9, 17, 36, 44, 45, 46, 52, 53];
         foreach($panes as $pane){
             $menu->getInventory()->setItem($pane, VanillaBlocks::STAINED_GLASS_PANE()->setColor(DyeColor::BLACK)->asItem());
         }
-        $start = 11;
-        foreach($this->shop as $catName => ["itemDisplay" => $itemDisplay, "items" => $items]){
-            $menu->getInventory()->setItem($start, StringToItemParser::getInstance()->parse($itemDisplay)->setCustomName("§r" . $catName));
-            $start++;
-            if(in_array($start, [16, 25, 34, 43])){
-                $start += 4;
-            }
+        $slot = 0;
+        foreach($this->shop as $catName => $category) {
+            $itemDisplay = $category['itemDisplay'];
+            $menu->getInventory()->setItem(
+                $this->catSlot[$slot],
+                StringToItemParser::getInstance()->parse($itemDisplay)->setCustomName("§r" . $catName)
+            );
+            $slot++;
         }
         $menu->setListener(InvMenu::readonly(function(DeterministicInvMenuTransaction $transaction) use ($menu): void {
             $slot = $transaction->getAction()->getSlot();
             $catName = str_replace("§r", "", $transaction->getAction()->getSourceItem()->getName());
-            if(!in_array($slot, [11, 12, 13, 14, 15] + [20, 21, 22, 23, 24] + [29, 30, 31, 32, 33] + [38, 39, 40, 41, 42])) return;
+            if(!in_array($slot, $this->catSlot)) return;
             $category = $this->getCategory($catName);
             if(is_null($category)) return;
 
             $menu->getInventory()->clearAll();
-            /** @var ShopItem $shopItem */
-            foreach($category["items"] as $shopItem){
-                $menu->getInventory()->addItem($shopItem->getItem()->setLore([
+            $this->makeCatMenu($menu, $catName);
+        }));
+    }
+
+    public function makeCatMenu(InvMenu $menu, string $catName): void {
+        $category = $this->getCategory($catName);
+        $panes = [0, 1, 7, 8, 9, 17, 36, 44, 45, 46, 52, 53];
+        foreach($panes as $pane){
+            $menu->getInventory()->setItem($pane, VanillaBlocks::STAINED_GLASS_PANE()->setColor(DyeColor::BLACK)->asItem());
+        }
+        $menu->getInventory()->setItem(49, VanillaBlocks::BARRIER()->asItem()->setCustomName("§r§cRetour"));
+        $slot = 0;
+        /** @var ShopItem $shopItem */
+        foreach($category["items"] as $shopItem){
+            $menu->getInventory()->setItem(
+                $this->catSlot[$slot],
+                $shopItem->getItem()->setLore([
                     "Prix d'achat :$" . (is_null($shopItem->getBuyPrice()) ? "Non-achetable" : $shopItem->getBuyPrice()),
                     "Prix de vente :$" . (is_null($shopItem->getSellPrice()) ? "Non-vendable" : $shopItem->getSellPrice())
-                ]));
-                $menu->setListener(InvMenu::readonly(function(DeterministicInvMenuTransaction $transaction) use ($catName): void {
-                    $transaction->getTransaction()->getSource()->removeCurrentWindow();
-                    $slot = $transaction->getAction()->getSlot();
-                    $this->sendForm($transaction->getTransaction()->getSource(), $this->getShopItem($catName, $slot));
-                }));
+                ])
+            );
+            $slot++;
+        }
+        $menu->setListener(InvMenu::readonly(function(DeterministicInvMenuTransaction $transaction) use ($catName, $menu): void {
+            $slot = $transaction->getAction()->getSlot();
+            if($slot === 49){
+                $menu->getInventory()->clearAll();
+                $this->makeMainMenu($menu);
+                return;
             }
+            $transaction->getTransaction()->getSource()->removeCurrentWindow();
+            var_dump($this->getShopItem($catName, $slot));
+            $this->sendForm($transaction->getTransaction()->getSource(), $this->getShopItem($catName, $slot));
         }));
-
-        $menu->send($player, "Shop");
     }
 
     public function sendForm(Player $player, ShopItem $item): void {
