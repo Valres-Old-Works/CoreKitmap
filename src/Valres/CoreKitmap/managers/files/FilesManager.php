@@ -31,7 +31,8 @@ class FilesManager extends BaseManager
     const SANCTIONS = "configs/sanctions-config";
     const MONEY     = "configs/money-config";
     const STATS     = "configs/statistics-config";
-    const CREDIT     = "configs/credit-config";
+    const CREDIT    = "configs/credit-config";
+    const SHOP     = "configs/shop-config";
 
     public function getName(): string {
         return "Files";
@@ -46,7 +47,7 @@ class FilesManager extends BaseManager
             "statistics/statistics", "configs/statistics-config",
             "box/box", "configs/box-config",
             "credits/credits",
-            "shop/shop"
+            "shop/shop", "configs/shop-config"
         ];
 
         $dirs = [

@@ -27,13 +27,16 @@ use JsonException;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\item\StringToItemParser;
+use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\Config;
+use Valres\CoreKitmap\Core;
 use Valres\CoreKitmap\libs\invmenu\InvMenu;
 use Valres\CoreKitmap\libs\invmenu\transaction\DeterministicInvMenuTransaction;
 use Valres\CoreKitmap\libs\invmenu\type\InvMenuTypeIds;
 use Valres\CoreKitmap\libs\jojoe77777\FormAPI\CustomForm;
 use Valres\CoreKitmap\managers\BaseManager;
+use Valres\CoreKitmap\managers\files\FilesManager;
 
 class ShopManager extends BaseManager
 {
@@ -122,8 +125,7 @@ class ShopManager extends BaseManager
         if(!isset($this->shop[$catName])){
             return null;
         }
-        $index = array_search($slot, $this->catSlot);
-        return $this->shop[$catName]["items"][$index] ?? null;
+        return $this->shop[$catName]["items"][$slot] ?? null;
     }
 
     public function addShopItem(string $catName, ShopItem $shopItem): void {
@@ -166,41 +168,134 @@ class ShopManager extends BaseManager
         }));
     }
 
-    public function makeCatMenu(InvMenu $menu, string $catName): void {
+    public function makeCatMenu(InvMenu $menu, string $catName, int $page = 1): void {
         $category = $this->getCategory($catName);
         $panes = [0, 1, 7, 8, 9, 17, 36, 44, 45, 46, 52, 53];
-        foreach($panes as $pane){
+        foreach ($panes as $pane) {
             $menu->getInventory()->setItem($pane, VanillaBlocks::STAINED_GLASS_PANE()->setColor(DyeColor::BLACK)->asItem());
         }
         $menu->getInventory()->setItem(49, VanillaBlocks::BARRIER()->asItem()->setCustomName("§r§cRetour"));
+
+        $itemsPerPage = count($this->catSlot);
+        $totalItems = count($category["items"]);
+        $totalPages = (int)ceil($totalItems / $itemsPerPage);
+
+        if($page > 1){
+            $menu->getInventory()->setItem(48, VanillaItems::ARROW()->setCustomName("§r§ePage précédente"));
+        }
+        if($page < $totalPages){
+            $menu->getInventory()->setItem(50, VanillaItems::ARROW()->setCustomName("§r§ePage suivante"));
+        }
+
+        $startIndex = ($page - 1) * $itemsPerPage;
+        $endIndex = min($startIndex + $itemsPerPage, $totalItems);
         $slot = 0;
-        /** @var ShopItem $shopItem */
-        foreach($category["items"] as $shopItem){
+
+        for($i = $startIndex; $i < $endIndex; $i++){
+            $shopItem = $category["items"][$i];
+            $lore = [];
+            foreach (Core::getInstance()->getConfigFile(FilesManager::SHOP)->get("in-shop-lore") as $line) {
+                $lore[] = str_replace(
+                    ["{buy-price}", "{sell-price}"],
+                    [(is_null($shopItem->getBuyPrice()) ? "§cNon-achetable" : $shopItem->getBuyPrice()), (is_null($shopItem->getSellPrice()) ? "§cNon-vendable" : $shopItem->getSellPrice())],
+                    $line
+                );
+            }
             $menu->getInventory()->setItem(
                 $this->catSlot[$slot],
-                $shopItem->getItem()->setLore([
-                    "Prix d'achat :$" . (is_null($shopItem->getBuyPrice()) ? "Non-achetable" : $shopItem->getBuyPrice()),
-                    "Prix de vente :$" . (is_null($shopItem->getSellPrice()) ? "Non-vendable" : $shopItem->getSellPrice())
-                ])
+                $shopItem->getItem()->setLore($lore)
             );
             $slot++;
         }
-        $menu->setListener(InvMenu::readonly(function(DeterministicInvMenuTransaction $transaction) use ($catName, $menu): void {
+
+        $menu->setListener(InvMenu::readonly(function (DeterministicInvMenuTransaction $transaction) use ($catName, $menu, $page, $totalPages): void {
             $slot = $transaction->getAction()->getSlot();
             if($slot === 49){
                 $menu->getInventory()->clearAll();
                 $this->makeMainMenu($menu);
                 return;
             }
-            $transaction->getTransaction()->getSource()->removeCurrentWindow();
-            var_dump($this->getShopItem($catName, $slot));
-            $this->sendForm($transaction->getTransaction()->getSource(), $this->getShopItem($catName, $slot));
+
+            if($slot === 48 && $page > 1){
+                $menu->getInventory()->clearAll();
+                $this->makeCatMenu($menu, $catName, $page - 1);
+                return;
+            }
+            if($slot === 50 && $page < $totalPages){
+                $menu->getInventory()->clearAll();
+                $this->makeCatMenu($menu, $catName, $page + 1);
+                return;
+            }
+
+            $itemIndex = ($page - 1) * count($this->catSlot) + array_search($slot, $this->catSlot);
+            $shopItem = $this->getShopItem($catName, $itemIndex);
+            if($shopItem !== null){
+                $transaction->getTransaction()->getSource()->removeCurrentWindow();
+                $this->sendForm($transaction->getTransaction()->getSource(), $shopItem);
+            }
         }));
     }
 
     public function sendForm(Player $player, ShopItem $item): void {
-        $form = new CustomForm(function(Player $player, array $data = null): void {
+        $form = new CustomForm(function(Player $player, array $data = null) use ($item): void {
             if(is_null($data)) return;
+            $config = Core::getInstance()->getConfigFile(FilesManager::SHOP);
+
+            $amount = intval($data[1]);
+            $sell   = $data[2];
+            $moneyManager = Core::getInstance()->moneyManager;
+
+            if($amount <= 0){
+                $player->sendMessage($config->get("positif-amount"));
+                return;
+            }
+
+            if(!$sell){
+                if(is_null($item->getBuyPrice())){
+                    $player->sendMessage($config->get("not-buyable"));
+                    return;
+                }
+
+                $total = $amount * $item->getBuyPrice();
+
+                if($moneyManager->getMoney($player->getName()) < $total){
+                    $player->sendMessage($config->get("no-money"));
+                    return;
+                }
+
+                $moneyManager->reduceMoney($player->getName(), $total);
+                $items = $item->getItem()->setCount($amount);
+                if($player->getInventory()->canAddItem($items)){
+                    $player->getInventory()->addItem($items);
+                } else $player->getWorld()->dropItem($player->getPosition(), $items);
+                $player->sendMessage(str_replace(
+                    ["{count}", "{item}", "{total}"],
+                    [$amount, $items->getName(), $total],
+                    $config->get("buy-message")
+                ));
+                return;
+            }
+
+            if(is_null($item->getSellPrice())){
+                $player->sendMessage($config->get("not-sellable"));
+                return;
+            }
+
+            $total = $amount * $item->getSellPrice();
+            $items = $item->getItem()->setCount($amount);
+
+            if(!$player->getInventory()->contains($items)){
+                $player->sendMessage($config->get("not-enought-item"));
+                return;
+            }
+            $moneyManager->addMoney($player->getName(), $total);
+            $player->sendMessage(str_replace(
+                ["{count}", "{item}", "{total}"],
+                [$amount, $items->getName(), $total],
+                $config->get("sell-message")
+            ));
+            $player->getInventory()->removeItem($items);
+
         });
         $form->setTitle($item->getItem()->getName());
         $form->addLabel(join("\n", [

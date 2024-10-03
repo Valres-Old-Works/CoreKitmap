@@ -1,0 +1,11 @@
+in-shop-lore:
+  - "§r§fPrix d'achat: ${buy-price}"
+  - "§r§fPrix de vente: ${sell-price}"
+
+positif-amount: "§cLe nombre doit être possitif."
+not-buyable: "§cCette item n'est pas achetable."
+not-sellable: "§cCette item n'est pas vendable."
+no-money: "§cTu n'as pas assez d'argent"
+buy-message: "§aTu viens d'acheter x{count} {item} pour ${total}"
+sell-message: "§aTu viens de vendre x{count} {item} pour ${total}"
+not-enought-item: "§cTu n'as pas assez d'item à vendre."
