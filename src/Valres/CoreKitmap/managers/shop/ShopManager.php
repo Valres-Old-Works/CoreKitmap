@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Valres\CoreKitmap\managers\shop;
 
+use InvalidArgumentException;
 use JsonException;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
@@ -75,6 +76,7 @@ class ShopManager extends BaseManager
 
     /** @throws JsonException */
     public function save(): void {
+        $this->datas->setAll([]);
         foreach($this->shop as $catName => ["itemDisplay" => $itemDisplay, "items" => $items]){
             $itemList = [];
             foreach($items as $item){
@@ -121,6 +123,31 @@ class ShopManager extends BaseManager
         unset($this->shop[$catName]);
     }
 
+    public function changeCategoryName(string $oldName, string $newName): void {
+        $orderedShop = [];
+
+        foreach($this->shop as $name => $category){
+            if($name === $oldName){
+                $orderedShop[$newName] = $category;
+            } else $orderedShop[$name] = $category;
+        }
+
+        $this->shop = $orderedShop;
+    }
+
+    public function modifyShopItem(string $catName, int $index, ShopItem $newShopItem): void {
+        $this->shop[$catName]["items"][$index] = $newShopItem;
+    }
+
+    public function changeCategoryItemDisplay(string $catName, string $newItemDisplay): void {
+        $this->shop[$catName]["itemDisplay"] = $newItemDisplay;
+    }
+
+    /** @return ShopItem[] */
+    public function getShopItems(string $catName): array {
+        return $this->shop[$catName]["items"];
+    }
+
     public function getShopItem(string $catName, int $slot): ?ShopItem {
         if(!isset($this->shop[$catName])){
             return null;
@@ -132,8 +159,9 @@ class ShopManager extends BaseManager
         $this->shop[$catName]["items"][] = $shopItem;
     }
 
-    public function removeShopItem(string $catName, int $data): void {
-        unset($this->shop[$catName]["items"][$data]);
+    public function removeShopItem(string $catName, int $index): void {
+        unset($this->shop[$catName]["items"][$index]);
+        $this->shop[$catName]["items"] = array_values($this->shop[$catName]["items"]);
     }
 
     public function sendMainMenu(Player $player): void {

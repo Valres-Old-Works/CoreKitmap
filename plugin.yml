@@ -13,6 +13,10 @@ permissions:
     default: op
   additem-shop.command:
     default: op
+  editcat-shop.command:
+    default: op
+  edititem-shop.command:
+    default: op
   #Box       :
   spawn-box.command:
     default: op
