@@ -29,7 +29,6 @@ use Valres\CoreKitmap\utils\Utils;
 
 class ListenersManager extends BaseManager
 {
-
     public function getName(): string {
         return "Listeners";
     }
