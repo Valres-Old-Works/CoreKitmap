@@ -47,11 +47,12 @@ class FilesManager extends BaseManager
             "statistics/statistics", "configs/statistics-config",
             "box/box", "configs/box-config",
             "credits/credits",
-            "shop/shop", "configs/shop-config"
+            "shop/shop", "configs/shop-config",
+            "items/armors.yml", "items/tools.yml"
         ];
 
         $dirs = [
-            "box/textures/", "box/geometries/",
+            "box/textures/", "box/geometries/"
         ];
 
         foreach($files as $file){

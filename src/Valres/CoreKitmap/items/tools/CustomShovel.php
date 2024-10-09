@@ -1,0 +1,87 @@
+<?php
+
+/**
+ *
+ *   ____               _  ___ _
+ *  / ___|___  _ __ ___| |/ (_) |_ _ __ ___   __ _ _ __
+ * | |   / _ \| '__/ _ \ ' /| | __| '_ ` _ \ / _` | '_ \
+ * | |__| (_) | | |  __/ . \| | |_| | | | | | (_| | |_) |
+ *  \____\___/|_|  \___|_|\_\_|\__|_| |_| |_|\__,_| .__/
+ *                                                |_|
+ * ENG: This file is strictly confidential and personal.
+ * It contains code developed for private purposes and must not be distributed, shared or used without the explicit permission of the author.
+ * Any violation will be subject to legal action.
+ * FRA: Ce fichier est strictement confidentiel et personnel.
+ * Il contient du code développé à des fins privées et ne doit en aucun cas être distribué, partagé ou utilisé sans autorisation explicite de l'auteur.
+ * Toute violation sera passible de poursuites légales.
+ *
+ * @author ValresMC
+ * @version v0.0.1
+ */
+
+declare(strict_types=1);
+
+namespace Valres\CoreKitmap\items\tools;
+
+use pocketmine\item\Axe;
+use pocketmine\item\ItemIdentifier;
+use pocketmine\item\ItemTypeIds;
+use pocketmine\item\Shovel;
+use pocketmine\item\ToolTier;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ListTag;
+use Valres\CoreKitmap\libs\customies\item\component\DamageComponent;
+use Valres\CoreKitmap\libs\customies\item\component\DurabilityComponent;
+use Valres\CoreKitmap\libs\customies\item\component\HandEquippedComponent;
+use Valres\CoreKitmap\libs\customies\item\CreativeInventoryInfo as CII;
+use Valres\CoreKitmap\libs\customies\item\ItemComponents;
+use Valres\CoreKitmap\libs\customies\item\ItemComponentsTrait;
+use Valres\CoreKitmap\utils\DiggerList;
+
+final class CustomShovel extends Shovel implements ItemComponents
+{
+    use ItemComponentsTrait {
+        getComponents as _getComponents;
+    }
+
+    protected int $damage;
+    protected int $durability;
+    protected int $efficiency;
+
+    public function __construct(string $name, string $texture, int $efficiency, int $damage, int $durability) {
+        parent::__construct(
+            new ItemIdentifier(ItemTypeIds::newId()),
+            $name,
+            ToolTier::DIAMOND
+        );
+        $this->efficiency = $efficiency;
+        $this->damage = $damage;
+        $this->durability = $durability;
+
+        $this->initComponent($texture, new CII(CII::CATEGORY_EQUIPMENT, CII::GROUP_AXE));
+        $this->addComponent(new HandEquippedComponent());
+        $this->addComponent(new DamageComponent($this->getAttackPoints()));
+        $this->addComponent(new DurabilityComponent($this->getMaxDurability()));
+    }
+
+    public function getAttackPoints(): int {
+        return $this->damage;
+    }
+
+    public function getMaxDurability(): int {
+        return $this->durability;
+    }
+
+    public function getComponents() : CompoundTag {
+        $itemData = $this->_getComponents();
+        $digger = CompoundTag::create()->setByte("use_efficiency", 1);
+        $destroy_speeds = new ListTag();
+        foreach(DiggerList::getDiggerList($this->getBlockToolType()) as $block){
+            $destroy_speeds->push(CompoundTag::create()
+                ->setString("block", $block)
+                ->setInt("speed", $this->efficiency)
+            );
+        }
+        return $itemData->setTag("components", $itemData->getCompoundTag("components")->setTag("minecraft:digger", $digger->setTag("destroy_speeds", $destroy_speeds)));
+    }
+}
