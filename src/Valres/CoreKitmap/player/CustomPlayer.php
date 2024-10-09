@@ -74,6 +74,10 @@ class CustomPlayer extends Player
         return $nbt;
     }
 
+    public function isOp(): bool {
+        return Server::getInstance()->isOp($this->getName());
+    }
+
     public function getGrade(): Grade {
         return $this->grade;
     }
