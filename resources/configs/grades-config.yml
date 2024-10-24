@@ -1,3 +1,7 @@
 default-grade-identifier: "joueur"
 
+no-grade: "§cCe grade n'existe pas."
+no-player: "§cCe joueur n'existe pas."
+setgrade-message: "§aLe grade de {player} a été défini sur {grade}"
+
 gradelist-message: "Grades ({grades}): {gradelist}"

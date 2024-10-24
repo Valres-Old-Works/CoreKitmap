@@ -131,4 +131,10 @@ class Utils
         @imagedestroy($img);
         return $bytes;
     }
+
+    public static function getHealBar(float $number, float $max, string $color): string {
+        $greenBars = $color . str_repeat("|", intval(($number / $max) * 20));
+        $grayBars = (strlen($greenBars) < 20 ? "§8" . str_repeat("|", 20 - strlen($greenBars)) : "");
+        return $greenBars . $grayBars . "§r";
+    }
 }

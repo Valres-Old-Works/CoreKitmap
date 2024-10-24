@@ -37,6 +37,7 @@ use Valres\CoreKitmap\managers\combat\CombatInterface;
 use Valres\CoreKitmap\managers\files\FilesManager;
 use Valres\CoreKitmap\managers\grades\Grade;
 use Valres\CoreKitmap\managers\sanctions\CasierJudiciaire;
+use Valres\CoreKitmap\utils\Utils;
 
 class CustomPlayer extends Player
 {
@@ -56,12 +57,20 @@ class CustomPlayer extends Player
         $plugin = Core::getInstance();
         $gradeManager = $plugin->gradesManager;
 
-        $this->grade            = $namedtag?->getTag("grade") instanceof StringTag ? $gradeManager->getGrade($namedtag->getString("grade")) : $gradeManager->getGrade(Core::getInstance()->getConfigFile(FilesManager::GRADES)->get("default-grade-identifier"));
+        $this->grade = $namedtag?->getTag("grade") instanceof StringTag
+            ? $gradeManager->getGrade($namedtag->getString("grade"))
+            : $gradeManager->getGrade(Core::getInstance()->getConfigFile(FilesManager::GRADES)->get("default-grade-identifier"));
         $this->calculPermissions();
 
-        $this->casierJudiciaire = $namedtag?->getTag("casier") instanceof StringTag ? unserialize($namedtag->getString("casier")) : new CasierJudiciaire();
-        $this->settings         = $namedtag?->getTag("settings") instanceof StringTag ? unserialize(($namedtag->getString("settings"))) : new Settings();
-        $this->combatInterface  = new CombatInterface();
+        $this->casierJudiciaire = $namedtag?->getTag("casier") instanceof StringTag
+            ? unserialize($namedtag->getString("casier"))
+            : new CasierJudiciaire();
+
+        $this->settings = $namedtag?->getTag("settings") instanceof StringTag
+            ? unserialize(($namedtag->getString("settings")))
+            : new Settings();
+
+        $this->combatInterface = new CombatInterface();
     }
 
     public function getSaveData(): CompoundTag {
@@ -128,6 +137,8 @@ class CustomPlayer extends Player
 
     public function onUpdate(int $currentTick): bool {
         if($this->isInFight() and $this->fightTime <= time()) $this->updateFight(false);
+        $this->setScoreTag(Utils::getHealBar($this->getHealth(), $this->getMaxHealth(), "§a"));
+
         return parent::onUpdate($currentTick);
     }
 

@@ -35,6 +35,7 @@ use Valres\CoreKitmap\managers\listeners\ListenersManager;
 use Valres\CoreKitmap\managers\money\MoneyManager;
 use Valres\CoreKitmap\managers\sanctions\SanctionsManager;
 use Valres\CoreKitmap\managers\shop\ShopManager;
+use Valres\CoreKitmap\tasks\ClearlagTask;
 
 trait InitTrait
 {
@@ -64,5 +65,8 @@ trait InitTrait
         $this->moneyManager      = new MoneyManager();
         $this->sanctionsManager  = new SanctionsManager();
         $this->statisticsManager = new StatisticsManager();
+
+        $clearlagConfig = $this->getConfigFile(FilesManager::CLEARLAG);
+        new ClearlagTask($clearlagConfig->get("time"));
     }
 }

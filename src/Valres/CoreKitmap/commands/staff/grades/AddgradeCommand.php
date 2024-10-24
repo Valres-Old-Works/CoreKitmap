@@ -49,12 +49,7 @@ class AddgradeCommand extends Command
 
             $missings      = [];
 
-            $id            = $data[1];
-            $name          = $data[2];
-            $chatFormat    = $data[3];
-            $nametagFormat = $data[4];
-            $color         = $data[5];
-            $isStaff       = $data[6];
+            [$content, $id, $name, $chatFormat, $nametagFormat, $color, $isStaff] = $data;
 
             if ($id === "")            $missings[] = "Identifiant";
             if ($name === "")          $missings[] = "Nom";

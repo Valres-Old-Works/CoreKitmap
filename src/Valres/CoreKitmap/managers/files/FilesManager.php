@@ -32,7 +32,8 @@ class FilesManager extends BaseManager
     const MONEY     = "configs/money-config";
     const STATS     = "configs/statistics-config";
     const CREDIT    = "configs/credit-config";
-    const SHOP     = "configs/shop-config";
+    const SHOP      = "configs/shop-config";
+    const CLEARLAG = "configs/clearlag-config";
 
     public function getName(): string {
         return "Files";
@@ -48,7 +49,8 @@ class FilesManager extends BaseManager
             "box/box", "configs/box-config",
             "credits/credits",
             "shop/shop", "configs/shop-config",
-            "items/armors.yml", "items/tools.yml"
+            "items/armors", "items/tools",
+            "configs/clearlag-config"
         ];
 
         $dirs = [

@@ -26,6 +26,7 @@ namespace Valres\CoreKitmap\listeners\entity;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\item\VanillaItems;
 use Valres\CoreKitmap\Core;
@@ -53,5 +54,23 @@ class EntityDamage implements Listener
         $damager->getCombatInterface()->setReach(min($distance, 3.0));
 
         $damager->sendCombatInterface();
+    }
+
+    public function _onDamage(EntityDamageEvent $event): void {
+        $cause  = $event->getCause();
+        $entity = $event->getEntity();
+
+        if(!$entity instanceof CustomPlayer) return;
+
+        if($cause === EntityDamageEvent::CAUSE_VOID){
+            $entity->teleport($entity->getWorld()->getSafeSpawn());
+            $event->cancel();
+            return;
+        }
+
+        if($cause === EntityDamageEvent::CAUSE_FALL){
+            $event->cancel();
+            return;
+        }
     }
 }

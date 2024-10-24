@@ -1,0 +1,4 @@
+time: 300
+interval: [30, 10, 5, 3, 2, 1]
+interval-message: "§aLes entitées vont être supprimées dans {secondes} sec."
+clearlag-message: "§a{entity} ont été supprimées."
